@@ -1,0 +1,16 @@
+[
+{
+  "modid": "rreeactors",
+  "name": "Rreeactors",
+  "description": "A reactor mod.",
+  "version": "0.0.0",
+  "mcversion": "1.7.10",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["rreeggkk"],
+  "credits": "Thanks to TehNut for his amazing BaseMod.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,21 @@
+#CREATIVE TAB
+itemGroup.jari.creativeTab=JARI
+
+#CONFIG GUI
+gui.jari.config.title=JARI Configuration
+
+#BLOCKS
+tile.blockHydraulicSeparator.name=Hydraulic Separator
+
+#GUI
+tileEntity.rreeHydraulicSeparator.name=Hydraulic Separator
+
+#ITEMS
+
+#TOOLTIPS
+
+#CONSOLE LOG
+info.jari.console.config.refresh=Refreshing configuration file.
+info.jari.console.load.preInit=Begin Pre-initialization
+info.jari.console.load.init=Begin Initialization
+info.jari.console.load.postInit=Begin Post-initialization

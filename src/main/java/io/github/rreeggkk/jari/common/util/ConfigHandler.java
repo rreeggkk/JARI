@@ -4,9 +4,9 @@ package io.github.rreeggkk.jari.common.util;
  * Creation and usage of the config file.
  */
 
-import net.minecraftforge.common.config.Configuration;
-
 import java.io.File;
+
+import net.minecraftforge.common.config.Configuration;
 
 public class ConfigHandler {
 

@@ -1,16 +1,14 @@
 package io.github.rreeggkk.jari.common.crafting.hydraulic;
 
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.world.World;
 
 public class HydraulicRecipe implements IHydraulicRecipe {
-	
+
 	private ItemStack input, output;
 	private int energy, water;
-	
-	public HydraulicRecipe(ItemStack input, ItemStack output, int energy, int water) {
+
+	public HydraulicRecipe(ItemStack input, ItemStack output, int energy,
+			int water) {
 		this.input = input;
 		this.output = output;
 		this.energy = energy;
@@ -24,7 +22,8 @@ public class HydraulicRecipe implements IHydraulicRecipe {
 
 	@Override
 	public boolean isInput(ItemStack input) {
-		return (input.isItemEqual(this.input)) && (this.input.stackSize <= input.stackSize);
+		return input.isItemEqual(this.input)
+				&& this.input.stackSize <= input.stackSize;
 	}
 
 	@Override

@@ -13,10 +13,12 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 public class EventHandler {
 
 	@SubscribeEvent
-	public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
+	public void onConfigChanged(
+			ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
 		if (eventArgs.modID.equals(ModInformation.ID)) {
 			ConfigHandler.syncConfig();
-			JARI.logger.info(TextHelper.localize("info." + ModInformation.ID + ".console.config.refresh"));
+			JARI.logger.info(TextHelper.localize("info." + ModInformation.ID
+					+ ".console.config.refresh"));
 		}
 	}
 }

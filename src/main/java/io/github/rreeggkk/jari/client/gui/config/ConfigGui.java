@@ -17,14 +17,17 @@ import cpw.mods.fml.client.config.IConfigElement;
 public class ConfigGui extends GuiConfig {
 
 	public ConfigGui(GuiScreen parentScreen) {
-		super(parentScreen, getConfigElements(parentScreen), ModInformation.ID, false, false, TextHelper.localize("gui." + ModInformation.ID + ".config.title"));
+		super(parentScreen, getConfigElements(parentScreen), ModInformation.ID,
+				false, false, TextHelper.localize("gui." + ModInformation.ID
+						+ ".config.title"));
 	}
 
 	@SuppressWarnings("rawtypes")
 	private static List<IConfigElement> getConfigElements(GuiScreen parent) {
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
 
-		// Adds sections declared in ConfigHandler. toLowerCase() is used because the configuration class automatically does this, so must we.
+		// Adds sections declared in ConfigHandler. toLowerCase() is used
+		// because the configuration class automatically does this, so must we.
 
 		return list;
 	}

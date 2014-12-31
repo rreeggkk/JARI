@@ -1,9 +1,9 @@
 package io.github.rreeggkk.jari.common.item;
 
 /*
-* Base item class for getting standard things done with quickly.
-* Extend this for pretty much every item you make.
-*/
+ * Base item class for getting standard things done with quickly.
+ * Extend this for pretty much every item you make.
+ */
 
 import io.github.rreeggkk.jari.JARI;
 import io.github.rreeggkk.jari.common.reference.ModInformation;

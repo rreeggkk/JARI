@@ -6,8 +6,6 @@ package io.github.rreeggkk.jari.common.item;
  * Keep that in mind if you like nicely organized creative tabs.
  */
 
-import net.minecraft.item.Item;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ItemRegistry {
 

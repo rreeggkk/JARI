@@ -12,22 +12,27 @@ import cpw.mods.fml.common.network.IGuiHandler;
 public class GuiHandler implements IGuiHandler {
 
 	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
+			int x, int y, int z) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity != null){
+		if (tileEntity != null) {
 			if (ID == GuiIDs.HYDRAULIC_SEPARATOR) {
-   				return new ContainerHydraulicSeparator(player.inventory, (TileEntityHydraulicSeparator) tileEntity);
+				return new ContainerHydraulicSeparator(player.inventory,
+						(TileEntityHydraulicSeparator) tileEntity);
 			}
 		}
 		return null;
 	}
+
 	@Override
-	
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
+			int x, int y, int z) {
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity != null){
+		if (tileEntity != null) {
 			if (ID == GuiIDs.HYDRAULIC_SEPARATOR) {
-   				return new GuiHydraulicSeparator(new ContainerHydraulicSeparator(player.inventory, (TileEntityHydraulicSeparator) tileEntity));
+				return new GuiHydraulicSeparator(
+						new ContainerHydraulicSeparator(player.inventory,
+								(TileEntityHydraulicSeparator) tileEntity));
 			}
 		}
 		return null;

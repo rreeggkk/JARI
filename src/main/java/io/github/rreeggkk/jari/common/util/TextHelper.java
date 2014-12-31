@@ -6,7 +6,8 @@ import net.minecraft.util.StatCollector;
 
 public class TextHelper {
 
-	//Call these to color your Strings. Remember to call the format before color.
+	// Call these to color your Strings. Remember to call the format before
+	// color.
 	/**
 	 * Color Coding *
 	 */
@@ -27,7 +28,8 @@ public class TextHelper {
 	public static final String YELLOW = (char) 167 + "e";
 	public static final String WHITE = (char) 167 + "f";
 
-	//Call these to format your Strings. Remember to call the format before color.
+	// Call these to format your Strings. Remember to call the format before
+	// color.
 	/**
 	 * Text formatting *
 	 */
@@ -36,10 +38,10 @@ public class TextHelper {
 	public static final String STRIKETHROUGH = (char) 167 + "m";
 	public static final String UNDERLINE = (char) 167 + "n";
 	public static final String ITALIC = (char) 167 + "o";
-	//This resets color and formatting
+	// This resets color and formatting
 	public static final String END = (char) 167 + "r";
 
-	//Call this to localize your text with a lang file.
+	// Call this to localize your text with a lang file.
 
 	/**
 	 * Enable Localizationizing *

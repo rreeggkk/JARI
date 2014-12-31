@@ -6,16 +6,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class OreHydraulicRecipe implements IHydraulicRecipe {
-	
+
 	private int input;
 	private int inputNum;
 	private ItemStack output;
 	private int energy, water;
-	
+
 	public OreHydraulicRecipe(String input, String output, int energy, int water) {
 		this.input = OreDictionary.getOreID(input);
 		ArrayList<ItemStack> ores = OreDictionary.getOres(output);
-		
+
 		if (!ores.isEmpty()) {
 			this.output = ores.get(0);
 		} else {
@@ -25,12 +25,13 @@ public class OreHydraulicRecipe implements IHydraulicRecipe {
 		inputNum = 1;
 		this.water = water;
 	}
-	
-	public OreHydraulicRecipe(String input, String output, int outputNum, int energy, int water) {
+
+	public OreHydraulicRecipe(String input, String output, int outputNum,
+			int energy, int water) {
 		this.input = OreDictionary.getOreID(input);
-		
+
 		ArrayList<ItemStack> ores = OreDictionary.getOres(output);
-		
+
 		if (!ores.isEmpty()) {
 			this.output = ores.get(0);
 		} else {
@@ -42,11 +43,12 @@ public class OreHydraulicRecipe implements IHydraulicRecipe {
 		this.water = water;
 	}
 
-	public OreHydraulicRecipe(String input, int inputNum, String output, int outputNum, int energy, int water) {
+	public OreHydraulicRecipe(String input, int inputNum, String output,
+			int outputNum, int energy, int water) {
 		this.input = OreDictionary.getOreID(input);
 		this.inputNum = inputNum;
 		ArrayList<ItemStack> ores = OreDictionary.getOres(output);
-		
+
 		if (!ores.isEmpty()) {
 			this.output = ores.get(0);
 		} else {
@@ -57,7 +59,8 @@ public class OreHydraulicRecipe implements IHydraulicRecipe {
 		this.water = water;
 	}
 
-	public OreHydraulicRecipe(String input, int inputNum, ItemStack output, int energy, int water) {
+	public OreHydraulicRecipe(String input, int inputNum, ItemStack output,
+			int energy, int water) {
 		this.input = OreDictionary.getOreID(input);
 		this.inputNum = inputNum;
 		this.output = output;
@@ -65,7 +68,8 @@ public class OreHydraulicRecipe implements IHydraulicRecipe {
 		this.water = water;
 	}
 
-	public OreHydraulicRecipe(ItemStack input, ItemStack output, int energy, int water) {
+	public OreHydraulicRecipe(ItemStack input, ItemStack output, int energy,
+			int water) {
 		this.input = OreDictionary.getOreIDs(input)[0];
 		inputNum = input.stackSize;
 		this.output = output;
@@ -81,11 +85,11 @@ public class OreHydraulicRecipe implements IHydraulicRecipe {
 	@Override
 	public boolean isInput(ItemStack input) {
 		for (int i : OreDictionary.getOreIDs(input)) {
-			if ((this.input == i) && (input.stackSize >= inputNum)) {
+			if (this.input == i && input.stackSize >= inputNum) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 

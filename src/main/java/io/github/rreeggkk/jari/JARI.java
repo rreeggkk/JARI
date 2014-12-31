@@ -5,7 +5,6 @@ package io.github.rreeggkk.jari;
  * If you wish to add a description to a class, or extend/change an existing one, submit a PR with your changes.
  */
 
-
 import io.github.rreeggkk.jari.client.creativetabs.CustomCreativeTab;
 import io.github.rreeggkk.jari.client.gui.GuiHandler;
 import io.github.rreeggkk.jari.common.block.BlockRecipeRegistry;
@@ -22,7 +21,6 @@ import io.github.rreeggkk.jari.common.util.TextHelper;
 
 import java.util.Random;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +41,8 @@ public class JARI {
 	@SidedProxy(clientSide = ModInformation.CLIENTPROXY, serverSide = ModInformation.COMMONPROXY)
 	public static CommonProxy proxy;
 
-	public static CustomCreativeTab tabRreeactors = new CustomCreativeTab(ModInformation.ID + ".creativeTab");
+	public static CustomCreativeTab tabRreeactors = new CustomCreativeTab(
+			ModInformation.ID + ".creativeTab");
 	public static Logger logger = LogManager.getLogger(ModInformation.NAME);
 	public static Random random = new Random();
 
@@ -52,14 +51,16 @@ public class JARI {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		logger.info(TextHelper.localize("info." + ModInformation.ID + ".console.load.preInit"));
+		logger.info(TextHelper.localize("info." + ModInformation.ID
+				+ ".console.load.preInit"));
 
 		ConfigHandler.init(event.getSuggestedConfigurationFile());
 
 		ItemRegistry.registerItems();
 		BlockRegistry.registerBlocks();
-		
-		tabRreeactors.setIcon(Item.getItemFromBlock(BlockRegistry.blockHydraulicSeparator));
+
+		tabRreeactors.setIcon(Item
+				.getItemFromBlock(BlockRegistry.blockHydraulicSeparator));
 
 		OreDictHandler.registerOreDict();
 		FMLCommonHandler.instance().bus().register(new EventHandler());
@@ -70,7 +71,8 @@ public class JARI {
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		logger.info(TextHelper.localize("info." + ModInformation.ID + ".console.load.init"));
+		logger.info(TextHelper.localize("info." + ModInformation.ID
+				+ ".console.load.init"));
 
 		ItemRecipeRegistry.registerItemRecipes();
 		BlockRecipeRegistry.registerBlockRecipes();
@@ -78,6 +80,7 @@ public class JARI {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		logger.info(TextHelper.localize("info." + ModInformation.ID + ".console.load.postInit"));
+		logger.info(TextHelper.localize("info." + ModInformation.ID
+				+ ".console.load.postInit"));
 	}
 }

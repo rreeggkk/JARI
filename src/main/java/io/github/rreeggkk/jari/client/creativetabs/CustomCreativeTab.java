@@ -4,9 +4,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
 public class CustomCreativeTab extends CreativeTabs {
-	
+
 	Item icon;
-	
+
 	public CustomCreativeTab(String name) {
 		super(name);
 	}
@@ -15,7 +15,7 @@ public class CustomCreativeTab extends CreativeTabs {
 		super(name);
 		this.icon = icon;
 	}
-	
+
 	public void setIcon(Item icon) {
 		this.icon = icon;
 	}

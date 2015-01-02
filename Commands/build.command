@@ -5,3 +5,5 @@ cd ../
 ./gradlew clean
 
 ./gradlew build
+
+./gradlew copyNativesLegacy

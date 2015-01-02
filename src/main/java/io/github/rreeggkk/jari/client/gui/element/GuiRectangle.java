@@ -1,22 +1,34 @@
 package io.github.rreeggkk.jari.client.gui.element;
 
-public class GuiRectangle {
-	private int x;
-	private int y;
-	private int h;
-	private int w;
+import io.github.rreeggkk.jari.client.gui.container.GuiJARI;
 
-	public GuiRectangle(int x, int y, int w, int h) {
-		this.x = x;
-		this.y = y;
-		this.h = h;
-		this.w = w;
+import java.util.ArrayList;
+
+public class GuiRectangle extends GuiElement{
+	protected String text;
+
+	public GuiRectangle(int x, int y, int w, int h, GuiJARI<?> g) {
+		super(x, y, w, h, g);
+	}
+	public GuiRectangle(int x, int y, int w, int h, String s, GuiJARI<?> g) {
+		super(x, y, w, h, g);
+		this.text = s;
+	}
+	
+	public void setText(String text) {
+		this.text = text;
+	}
+	
+	public String getText() {
+		return text;
 	}
 
-	public boolean isPointIn(int mx, int my) {
-		if (mx > x && my > y && mx < x + w && my < y + h) {
-			return true;
+	@Override
+	public void drawForegroundLayer(int x, int y) {
+		if (text != null && isPointIn(x - gui.getGuiLeft(), y - gui.getGuiTop())) {
+			ArrayList<String> list = new ArrayList<String>();
+			list.add(text);
+			gui.drawHoveringText(list, x - gui.getGuiLeft(), y - gui.getGuiTop());
 		}
-		return false;
 	}
 }

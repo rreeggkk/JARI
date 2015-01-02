@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 
-import org.lwjgl.opengl.GL11;
-
 public class GuiJARI<T extends Container> extends GuiContainer {
 	protected T container;
 	protected int guiLeft;
@@ -18,6 +16,7 @@ public class GuiJARI<T extends Container> extends GuiContainer {
 	public GuiJARI(T container) {
 		super(container);
 		this.container = container;
+		elements = new ArrayList<GuiElement>();
 	}
 
 	/**
@@ -33,10 +32,6 @@ public class GuiJARI<T extends Container> extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f1, int f2, int f3) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-		guiLeft = (width - xSize) / 2;
-		guiTop = (height - ySize) / 2;
 		
 		for (GuiElement e : elements) {
 			e.drawBackgroundLayer(f1, f2, f3);

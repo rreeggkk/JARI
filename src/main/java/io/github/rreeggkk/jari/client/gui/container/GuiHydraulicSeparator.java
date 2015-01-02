@@ -1,5 +1,7 @@
 package io.github.rreeggkk.jari.client.gui.container;
 
+import org.lwjgl.opengl.GL11;
+
 import io.github.rreeggkk.jari.client.gui.element.GuiEnergyMeter;
 import io.github.rreeggkk.jari.client.gui.element.GuiFluidTank;
 import io.github.rreeggkk.jari.common.entity.tile.TileEntityHydraulicSeparator;
@@ -12,7 +14,7 @@ public class GuiHydraulicSeparator extends GuiJARI<ContainerHydraulicSeparator> 
 	private static final ResourceLocation guiTextures = new ResourceLocation(
 			ModInformation.ID
 			+ ":textures/gui/container/hydraulicSeparator.png");
-	
+
 	private GuiEnergyMeter energy;
 	private GuiFluidTank fluid;
 
@@ -29,7 +31,6 @@ public class GuiHydraulicSeparator extends GuiJARI<ContainerHydraulicSeparator> 
 	 */
 	@Override
 	protected void drawGuiContainerForegroundLayer(int x, int y) {
-		super.drawGuiContainerForegroundLayer(x, y);
 		String s = container.tile.hasCustomInventoryName() ? container.tile
 				.getInventoryName() : I18n.format(
 						container.tile.getInventoryName(), new Object[0]);
@@ -38,15 +39,19 @@ public class GuiHydraulicSeparator extends GuiJARI<ContainerHydraulicSeparator> 
 				fontRendererObj.drawString(
 						I18n.format("container.inventory", new Object[0]), 28,
 						ySize - 96 + 2, 4210752);
+		super.drawGuiContainerForegroundLayer(x, y);
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f1, int f2, int f3) {	
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+		guiLeft = (width - xSize) / 2;
+		guiTop = (height - ySize) / 2;
+
 		energy.setEnergy(container.tile.getEnergy());
 		fluid.setFluid(container.tile.getTank().getFluid());
-		
-		super.drawGuiContainerBackgroundLayer(f1, f2, f3);
-		
+
 		mc.getTextureManager().bindTexture(guiTextures);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
@@ -58,5 +63,7 @@ public class GuiHydraulicSeparator extends GuiJARI<ContainerHydraulicSeparator> 
 			drawTexturedModalRect(guiLeft + 77, guiTop + 36, 176, 14,
 					24 - container.tile.getProgressScaled(24), 17);
 		}
+
+		super.drawGuiContainerBackgroundLayer(f1, f2, f3);
 	}
 }

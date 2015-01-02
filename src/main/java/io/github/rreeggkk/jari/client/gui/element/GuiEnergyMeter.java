@@ -40,8 +40,8 @@ public class GuiEnergyMeter extends GuiRectangle {
 		int energySize = (int) ((float) energy * 71 / maxAmount);
 		gui.drawTexturedModalRect(
 				gui.getGuiLeft() + x+1, gui.getGuiTop() + y+1 + (71 - energySize),
-				72, energySize + 1,
-				16, 71);
+				72, 72 - energySize,
+				16, energySize);
 
 	}
 	

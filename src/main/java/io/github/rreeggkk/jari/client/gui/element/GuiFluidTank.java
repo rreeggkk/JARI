@@ -37,20 +37,26 @@ public class GuiFluidTank extends GuiRectangle {
 
 		gui.drawTexturedModalRect(gui.getGuiLeft() + x, gui.getGuiTop() + y, 0, 0, 18, 73);
 		
-		int waterSize = (int) ((float) fluid.amount * 71 / maxAmount);
-		drawFluid(fluid,
-				gui.getGuiLeft() + x+1, gui.getGuiTop() + y+1 + (71 - waterSize),
-				16, waterSize,
-				71);
+		if (fluid != null) {
+			int waterSize = (int) ((float) fluid.amount * 71 / maxAmount);
+			drawFluid(fluid,
+					gui.getGuiLeft() + x+1, gui.getGuiTop() + y+1 + (71 - waterSize),
+					16, waterSize,
+					71);
 
-		gui.mc.getTextureManager().bindTexture(elementTextures);
+			gui.mc.getTextureManager().bindTexture(elementTextures);
+		}
 
 		gui.drawTexturedModalRect(gui.getGuiLeft() + x, gui.getGuiTop() + y, 18, 0, 18, 73);
 	}
 	
 	@Override
 	public void drawForegroundLayer(int x, int y) {
-		text = fluid.amount + "/" + maxAmount + " mB";
+		if (fluid != null) {
+			text = fluid.amount + "/" + maxAmount + " mB";
+		} else {
+			text = "0/" + maxAmount + " mB";
+		}
 		super.drawForegroundLayer(x, y);
 	}
 }

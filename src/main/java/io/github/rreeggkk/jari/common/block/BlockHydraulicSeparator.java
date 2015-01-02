@@ -23,7 +23,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
 import cofh.lib.util.helpers.FluidHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -109,16 +108,8 @@ public class BlockHydraulicSeparator extends BlockContainer {
 			return false;
 		}
 		
-		
-		if (FluidHelper.isPlayerHoldingFluidContainerItem(player)) {
-			FluidStack f = FluidHelper.extractFluidFromHeldContainer(player, 0, false);
-			if (f.fluidID == FluidHelper.WATER.fluidID) {
-				TileEntityHydraulicSeparator t = (TileEntityHydraulicSeparator)world.getTileEntity(x, y, z);
-				if (t.getWaterCount() + f.amount <= TileEntityHydraulicSeparator.maxWater) {
-					FluidHelper.extractFluidFromHeldContainer(player, 0, true);
-					t.setWaterCount(t.getWaterCount() + f.amount);
-				}
-			}
+		if (FluidHelper.fillHandlerWithContainer(world, (TileEntityHydraulicSeparator)tileEntity, player)) {
+			return true;
 		}
 		
 		player.openGui(JARI.instance, GuiIDs.HYDRAULIC_SEPARATOR, world, x, y,

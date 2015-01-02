@@ -23,6 +23,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+import cofh.lib.util.helpers.FluidHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -106,6 +108,19 @@ public class BlockHydraulicSeparator extends BlockContainer {
 		if (tileEntity == null || player.isSneaking()) {
 			return false;
 		}
+		
+		
+		if (FluidHelper.isPlayerHoldingFluidContainerItem(player)) {
+			FluidStack f = FluidHelper.extractFluidFromHeldContainer(player, 0, false);
+			if (f.fluidID == FluidHelper.WATER.fluidID) {
+				TileEntityHydraulicSeparator t = (TileEntityHydraulicSeparator)world.getTileEntity(x, y, z);
+				if (t.getWaterCount() + f.amount <= TileEntityHydraulicSeparator.maxWater) {
+					FluidHelper.extractFluidFromHeldContainer(player, 0, true);
+					t.setWaterCount(t.getWaterCount() + f.amount);
+				}
+			}
+		}
+		
 		player.openGui(JARI.instance, GuiIDs.HYDRAULIC_SEPARATOR, world, x, y,
 				z);
 		return true;
@@ -146,9 +161,9 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	 */
 	@Override
 	 public void onBlockPlacedBy(World world, int x, int y, int z,
-			EntityLivingBase p_149689_5_, ItemStack item) {
+			EntityLivingBase e, ItemStack item) {
 		int l = MathHelper
-				.floor_double(p_149689_5_.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+				.floor_double(e.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
 		if (l == 0) {
 			world.setBlockMetadataWithNotify(x, y, z, 4, 2);
@@ -165,22 +180,17 @@ public class BlockHydraulicSeparator extends BlockContainer {
 		if (l == 3) {
 			world.setBlockMetadataWithNotify(x, y, z, 8, 2);
 		}
-
-		if (item.hasDisplayName()) {
-			// ((TileEntityRreeFurnace)world.getTileEntity(x, y,
-			// z)).func_145951_a(item.getDisplayName());
-		}
 	}
 
 	@Override
 	 public void breakBlock(World world, int x, int y, int z, Block block,
 			int p_149749_6_) {
-		TileEntityHydraulicSeparator tileentityfurnace = (TileEntityHydraulicSeparator) world
+		TileEntityHydraulicSeparator tile = (TileEntityHydraulicSeparator) world
 				.getTileEntity(x, y, z);
 
-		if (tileentityfurnace != null) {
-			for (int i1 = 0; i1 < tileentityfurnace.getSizeInventory(); ++i1) {
-				ItemStack itemstack = tileentityfurnace.getStackInSlot(i1);
+		if (tile != null) {
+			for (int i1 = 0; i1 < tile.getSizeInventory(); ++i1) {
+				ItemStack itemstack = tile.getStackInSlot(i1);
 
 				if (itemstack != null) {
 					float f = JARI.random.nextFloat() * 0.8F + 0.1F;
@@ -217,10 +227,6 @@ public class BlockHydraulicSeparator extends BlockContainer {
 					}
 				}
 			}
-
-			JARI.random.nextFloat();
-			JARI.random.nextFloat();
-			JARI.random.nextFloat();
 
 			world.func_147453_f(x, y, z, block);
 		}

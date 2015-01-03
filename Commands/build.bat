@@ -1,5 +1,5 @@
 cd "$( dirname "$0" )"
-cd ../
+cd ..\
 
 gradlew.bat clean
 

@@ -1,6 +1,6 @@
 cd "$( dirname "$0" )"
-cd ../
+cd ..\
 
-gradlew setupDecompWorkspace
+gradlew.bat setupDecompWorkspace
 
-gradlew eclipse
+gradlew.bat eclipse

@@ -1,7 +1,9 @@
 package io.github.rreeggkk.jari.common.entity.tile;
 
+import io.github.rreeggkk.jari.JARI;
 import io.github.rreeggkk.jari.common.crafting.hydraulic.HydraulicSeparatorCraftingHandler;
 import io.github.rreeggkk.jari.common.crafting.hydraulic.IHydraulicRecipe;
+import io.github.rreeggkk.jari.common.enums.RedstonePowerMode;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -22,29 +24,32 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
-		ISidedInventory, IFluidHandler {
+		ISidedInventory, IFluidHandler, IRedstoneControllable {
 	public static final int maxWater = 16 * 1000;
 
 	private FluidTank tank;
 
 	private ItemStack[] inventory;
-	private int currentProcessEnergy = 0, processStartEnergy = 0;
+	private int currentProcessEnergy, processStartEnergy;
 	private Item lastItemInMachine;
 	private int lastItemMetaInMachine;
+	private RedstonePowerMode powerMode;
 
 	public TileEntityHydraulicSeparator() {
 		super();
 		inventory = new ItemStack[2];
 		storage = new EnergyStorage(100000);
 		tank = new FluidTank(maxWater);
+		powerMode = RedstonePowerMode.REQUIRED_ON;
 	}
 
 	@Override
 	public void updateEntity() {
 		// worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord,
 		// worldObj.getBlockMetadata(xCoord, yCoord, zCoord), 2);
-		if (!worldObj.isRemote) {
-
+		JARI.logger.error("PowerMode status: " + powerMode);
+		if (!worldObj.isRemote && isRedstoneModeActive()) {
+			
 			if (inventory[0] != null
 					&& (inventory[0].getItem() != lastItemInMachine || inventory[0]
 							.getItemDamage() != lastItemMetaInMachine)) {
@@ -91,6 +96,20 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		}
 	}
 
+	private boolean isRedstoneModeActive() {
+		switch (powerMode) {
+			case ALWAYS_ON:
+				return true;
+			case ALWAYS_OFF:
+				return false;
+			case REQUIRED_ON:
+				return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+			case REQUIRED_OFF:
+				return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+		}
+		return false;
+	}
+
 	private int getMinEnergyPerTick() {
 		return 80;
 	}
@@ -129,6 +148,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 
 		currentProcessEnergy = compound.getInteger("Progress");
 		processStartEnergy = compound.getInteger("Start");
+		powerMode = RedstonePowerMode.getFromIndex(compound.getInteger("PowerMode"));
 	}
 
 	@Override
@@ -148,6 +168,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 
 		compound.setInteger("Progress", currentProcessEnergy);
 		compound.setInteger("Start", processStartEnergy);
+		compound.setInteger("PowerMode", powerMode.getIndex());
 	}
 
 	public int processItem() {
@@ -345,8 +366,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 	}
 
 	public boolean isRunning() {
-		return currentProcessEnergy != 0 && canProcess()
-				&& storage.getEnergyStored() >= getCurrentEnergyPerTick();
+		return isRedstoneModeActive() && (currentProcessEnergy != 0 && canProcess() && storage.getEnergyStored() >= getCurrentEnergyPerTick());
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -447,5 +467,19 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 	@Override
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		return new FluidTankInfo[] { tank.getInfo() };
+	}
+
+	public int getComparatorOutput() {
+		return 0;
+	}
+	
+	@Override
+	public RedstonePowerMode getPowerMode() {
+		return powerMode;
+	}
+	
+	@Override
+	public void setPowerMode(RedstonePowerMode powerMode) {
+		this.powerMode = powerMode;
 	}
 }

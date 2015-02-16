@@ -14,8 +14,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,13 +25,28 @@ import cofh.lib.util.helpers.FluidHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * 
+ * Based off of the Vanilla Furnace class
+ * 
+ * @author rreeggkk
+ *
+ */
 public class BlockHydraulicSeparator extends BlockContainer {
+	//Block's textures
 	@SideOnly(Side.CLIENT)
 	private IIcon onTexture, offTexture, topTexture;
 
+	/**
+	 * Default constructor
+	 */
 	public BlockHydraulicSeparator() {
 		super(Material.iron);
+
+		//Set the creative tab
 		setCreativeTab(JARI.tabRreeactors);
+
+		//Set the block name
 		setBlockName("blockHydraulicSeparator");
 	}
 
@@ -43,6 +56,7 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	@Override
 	public void onBlockAdded(World world, int x, int y, int z) {
 		super.onBlockAdded(world, x, y, z);
+		//Copied the function from vanilla furnace so idk what it does
 		unknownNameOfFunction(world, x, y, z);
 	}
 
@@ -78,15 +92,17 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	 * Gets the block's texture. Args: side, meta
 	 */
 	@Override
-	 @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
+		//Get the correct icon for the side of the block
 		return side == 1 ? topTexture : side != meta / 2 ? blockIcon
 				: isOn(meta) ? onTexture : offTexture;
 	}
 
 	@Override
-	 @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegistry) {
+		//Load all textures for the block
 		blockIcon = iconRegistry.registerIcon(ModInformation.ID
 				+ ":hydraulicSeparator_side");
 		onTexture = iconRegistry.registerIcon(ModInformation.ID
@@ -101,37 +117,50 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	 * Called upon block activation (right click on the block.)
 	 */
 	@Override
-	 public boolean onBlockActivated(World world, int x, int y, int z,
+	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int hitx, float hity, float hitz, float side) {
+		
+		//Get the tile entity
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		//If the tile entity doesn't exsist or the player is sneaking
 		if (tileEntity == null || player.isSneaking()) {
+			//Let the normal action happen
 			return false;
 		}
-		
+
+		//Try to fill the tile entity with fluid if the player is holding a fluid container
 		if (FluidHelper.fillHandlerWithContainer(world, (TileEntityHydraulicSeparator)tileEntity, player)) {
+			//If it works stop everything else
 			return true;
 		}
 		
+		//Open the GUI
 		player.openGui(JARI.instance, GuiIDs.HYDRAULIC_SEPARATOR, world, x, y,
 				z);
+		//Stop any other right click actions
 		return true;
 	}
 
 	/**
-	 * Update which block the furnace is using depending on whether or not it is
-	 * burning
+	 * Update the state is using depending on whether or not it is
+	 * running
 	 */
 	public static void updateBlockState(boolean isRunning, World world, int x,
 			int y, int z) {
+		
+		//Metadata
 		int l = world.getBlockMetadata(x, y, z);
+		//TileEntity
 		TileEntity tileentity = world.getTileEntity(x, y, z);
 
+		//Change the metadata accordingly
 		if (isRunning) {
 			world.setBlockMetadataWithNotify(x, y, z, l - 1, 3);
 		} else {
 			world.setBlockMetadataWithNotify(x, y, z, l + 1, 3);
 		}
 
+		//Validate the tileentity
 		if (tileentity != null) {
 			tileentity.validate();
 			world.setTileEntity(x, y, z, tileentity);
@@ -143,7 +172,7 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	 * the block.
 	 */
 	@Override
-	 public TileEntity createNewTileEntity(World world, int p_149915_2_) {
+	public TileEntity createNewTileEntity(World world, int i1) {
 		return new TileEntityHydraulicSeparator();
 	}
 
@@ -151,11 +180,14 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	 * Called when the block is placed in the world.
 	 */
 	@Override
-	 public void onBlockPlacedBy(World world, int x, int y, int z,
+	public void onBlockPlacedBy(World world, int x, int y, int z,
 			EntityLivingBase e, ItemStack item) {
+		
+		//Determine the direction
 		int l = MathHelper
 				.floor_double(e.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
+		//Depending on direction set metadata
 		if (l == 0) {
 			world.setBlockMetadataWithNotify(x, y, z, 4, 2);
 		}
@@ -174,39 +206,53 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	}
 
 	@Override
-	 public void breakBlock(World world, int x, int y, int z, Block block,
+	public void breakBlock(World world, int x, int y, int z, Block block,
 			int p_149749_6_) {
+		//Get the tile entity
 		TileEntityHydraulicSeparator tile = (TileEntityHydraulicSeparator) world
 				.getTileEntity(x, y, z);
 
+		//If it exists
 		if (tile != null) {
+			//Loop through the inventory
 			for (int i1 = 0; i1 < tile.getSizeInventory(); ++i1) {
+				//Get the itemstack in the current slot
 				ItemStack itemstack = tile.getStackInSlot(i1);
 
+				//If it exists
 				if (itemstack != null) {
+					//Get random numbers to use for direction stack size and velocity
 					float f = JARI.random.nextFloat() * 0.8F + 0.1F;
 					float f1 = JARI.random.nextFloat() * 0.8F + 0.1F;
 					float f2 = JARI.random.nextFloat() * 0.8F + 0.1F;
 
+					//Until the stack size is 0
 					while (itemstack.stackSize > 0) {
+						//Get a random size
 						int j1 = JARI.random.nextInt(21) + 10;
 
+						//Make sure it is smaller or the same size
 						if (j1 > itemstack.stackSize) {
 							j1 = itemstack.stackSize;
 						}
 
+						//Decrease itemstack size
 						itemstack.stackSize -= j1;
+						
+						//Create a new item entity
 						EntityItem entityitem = new EntityItem(world, x + f, y
 								+ f1, z + f2, new ItemStack(
-								itemstack.getItem(), j1,
-								itemstack.getItemDamage()));
+										itemstack.getItem(), j1,
+										itemstack.getItemDamage()));
 
+						//Copy NBT data
 						if (itemstack.hasTagCompound()) {
 							entityitem.getEntityItem().setTagCompound(
 									(NBTTagCompound) itemstack.getTagCompound()
-											.copy());
+									.copy());
 						}
 
+						//Multiplier for speed
 						float f3 = 0.05F;
 						entityitem.motionX = (float) JARI.random.nextGaussian()
 								* f3;
@@ -214,11 +260,13 @@ public class BlockHydraulicSeparator extends BlockContainer {
 								* f3 + 0.2F;
 						entityitem.motionZ = (float) JARI.random.nextGaussian()
 								* f3;
+						//Spawn it into the world
 						world.spawnEntityInWorld(entityitem);
 					}
 				}
 			}
 
+			//Call some function
 			world.func_147453_f(x, y, z, block);
 		}
 
@@ -230,17 +278,21 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	 * items for display
 	 */
 	@Override
-	 @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
 	public void randomDisplayTick(World world, int x, int y, int z,
 			Random random) {
+		//If the machine is on
 		if (isOn(world, x, y, z)) {
+			//Get direction
 			int l = world.getBlockMetadata(x, y, z);
+			//Position maths
 			float f = x + 0.5F;
 			float f1 = y + 0.0F + random.nextFloat() * 6.0F / 16.0F;
 			float f2 = z + 0.5F;
 			float f3 = 0.52F;
 			float f4 = random.nextFloat() * 0.6F - 0.3F;
 
+			//Spawn splash particles on front face of machine
 			if (l == 9) {
 				world.spawnParticle("splash", f - f3, f1, f2 + f4, 0.0D, 0.0D,
 						0.0D);
@@ -271,8 +323,8 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	 * redstone signal strength.
 	 */
 	@Override
-	 public boolean hasComparatorInputOverride() {
-		return false;
+	public boolean hasComparatorInputOverride() {
+		return true;
 	}
 
 	/**
@@ -281,29 +333,32 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	 * comparator.
 	 */
 	@Override
-	 public int getComparatorInputOverride(World world, int x, int y, int z,
-			int p_149736_5_) {
-		return Container.calcRedstoneFromInventory((IInventory) world
-				.getTileEntity(x, y, z));
+	public int getComparatorInputOverride(World world, int x, int y, int z, int p_149736_5_) {
+		return ((TileEntityHydraulicSeparator)world.getTileEntity(x, y, z)).getComparatorOutput();
 	}
 
 	/**
 	 * Gets an item for the block being called on. Args: world, x, y, z
 	 */
 	@Override
-	 @SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT)
 	public Item getItem(World world, int x, int y, int z) {
+		//Get the item form of the block
 		return Item.getItemFromBlock(this);
 	}
 
 	public boolean isOn(World world, int x, int y, int z) {
+		//Check if the machine is on
 		return isOn(world.getBlockMetadata(x, y, z));
 	}
 
 	public boolean isOn(int meta) {
+		//If right most bit is 0
 		if (meta % 2 == 0) {
+			//return false
 			return false;
 		}
+		//else return true
 		return true;
 	}
 }

@@ -1,10 +1,5 @@
 package io.github.rreeggkk.jari;
 
-/*
- * Check all the classes for (hopefully) detailed descriptions of what it does. There will also be tidbits of comments throughout the codebase.
- * If you wish to add a description to a class, or extend/change an existing one, submit a PR with your changes.
- */
-
 import io.github.rreeggkk.jari.client.creativetabs.CustomCreativeTab;
 import io.github.rreeggkk.jari.client.gui.GuiHandler;
 import io.github.rreeggkk.jari.common.block.BlockRecipeRegistry;
@@ -21,6 +16,7 @@ import io.github.rreeggkk.jari.common.util.TextHelper;
 
 import java.util.Random;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -35,51 +32,76 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
+/**
+ * 
+ * @author rreeggkk
+ *
+ */
 @Mod(modid = ModInformation.ID, name = ModInformation.NAME, version = ModInformation.VERSION, dependencies = ModInformation.DEPEND, guiFactory = ModInformation.GUIFACTORY)
 public class JARI {
 
+	//The proxy
 	@SidedProxy(clientSide = ModInformation.CLIENTPROXY, serverSide = ModInformation.COMMONPROXY)
 	public static CommonProxy proxy;
 
+	//The creative tab
 	public static CustomCreativeTab tabRreeactors = new CustomCreativeTab(
 			ModInformation.ID + ".creativeTab");
+	//The logger
 	public static Logger logger = LogManager.getLogger(ModInformation.NAME);
+	//The random
 	public static Random random = new Random();
 
-	@Mod.Instance
+	//Mod instance
+	@Instance
 	public static JARI instance;
 
+	/**
+	 * Pre init method
+	 * @param event FML's pre init event
+	 */
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		//Log the beggining of preinit
 		logger.info(TextHelper.localize("info." + ModInformation.ID
 				+ ".console.load.preInit"));
 
+		//Initialize or config
 		ConfigHandler.init(event.getSuggestedConfigurationFile());
 
+		//Load items and blocks
 		ItemRegistry.registerItems();
 		BlockRegistry.registerBlocks();
 
+		//Set reactor tab icon
 		tabRreeactors.setIcon(Item
 				.getItemFromBlock(BlockRegistry.blockHydraulicSeparator));
 
+		//Do ore dictionary registry
 		OreDictHandler.registerOreDict();
+		//Register the mod's event handler
 		FMLCommonHandler.instance().bus().register(new EventHandler());
+		//Register the mod's gui handler
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
+		//Register the mod's world generation handler
 		GameRegistry.registerWorldGenerator(new GenerationHandler(), 2);
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
+		//Log the beggining of init
 		logger.info(TextHelper.localize("info." + ModInformation.ID
 				+ ".console.load.init"));
 
+		//Load item and block recipes
 		ItemRecipeRegistry.registerItemRecipes();
 		BlockRecipeRegistry.registerBlockRecipes();
 	}
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		//Log the beggining of postinit
 		logger.info(TextHelper.localize("info." + ModInformation.ID
 				+ ".console.load.postInit"));
 	}

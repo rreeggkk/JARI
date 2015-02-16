@@ -55,7 +55,8 @@ public abstract class GuiElement {
 	}
 	public void drawForegroundLayer(int x, int y){
 	}
-	public void onClick() {
+	public boolean onClick(int guiX, int guiY, int mouseButton) {
+		return false;
 	}
 
 	public boolean isPointIn(int mx, int my) {
@@ -95,6 +96,21 @@ public abstract class GuiElement {
 			}
 		}
 		drawCutIcon(icon, x + fullX * 16, y + fullY * 16, lastX, lastY, fullLvl == fullY ? lastLvl : 0);
+	}
+
+	public void drawIcon(IIcon icon, int x, int y, int width, int height) {
+		if (icon == null) {
+			return;
+		}
+		gui.mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+
+		Tessellator tess = Tessellator.instance;
+		tess.startDrawingQuads();
+		tess.addVertexWithUV(x, y, gui.getZLevel(), icon.getMinU(), icon.getMinV());
+		tess.addVertexWithUV(x, y + height, gui.getZLevel(), icon.getMinU(), icon.getMaxV());
+		tess.addVertexWithUV(x + width, y + height, gui.getZLevel(), icon.getMaxU(), icon.getMaxV());
+		tess.addVertexWithUV(x + width, y, gui.getZLevel(), icon.getMaxU(), icon.getMinV());
+		tess.draw();
 	}
 
 	//The magic is here

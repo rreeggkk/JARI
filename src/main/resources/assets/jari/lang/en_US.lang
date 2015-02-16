@@ -9,6 +9,10 @@ tile.blockHydraulicSeparator.name=Hydraulic Separator
 
 #GUI
 tileEntity.rreeHydraulicSeparator.name=Hydraulic Separator
+jari.gui.element.redstoneControl.high=Redstone Control (High Required)
+jari.gui.element.redstoneControl.low=Redstone Control (Low Required)
+jari.gui.element.redstoneControl.always=Redstone Control (Always On)
+jari.gui.element.redstoneControl.never=Redstone Control (Never On)
 
 #ITEMS
 

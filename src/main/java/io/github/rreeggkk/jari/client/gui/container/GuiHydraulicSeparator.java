@@ -1,14 +1,20 @@
 package io.github.rreeggkk.jari.client.gui.container;
 
-import org.lwjgl.opengl.GL11;
-
 import io.github.rreeggkk.jari.client.gui.element.GuiEnergyMeter;
 import io.github.rreeggkk.jari.client.gui.element.GuiFluidTank;
+import io.github.rreeggkk.jari.client.gui.element.GuiRedstoneControl;
+import io.github.rreeggkk.jari.client.gui.element.GuiSideTab;
 import io.github.rreeggkk.jari.common.entity.tile.TileEntityHydraulicSeparator;
 import io.github.rreeggkk.jari.common.inventory.ContainerHydraulicSeparator;
 import io.github.rreeggkk.jari.common.reference.ModInformation;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.discovery.ContainerType;
 
 public class GuiHydraulicSeparator extends GuiJARI<ContainerHydraulicSeparator> {
 	private static final ResourceLocation guiTextures = new ResourceLocation(
@@ -17,12 +23,16 @@ public class GuiHydraulicSeparator extends GuiJARI<ContainerHydraulicSeparator> 
 
 	private GuiEnergyMeter energy;
 	private GuiFluidTank fluid;
+	private GuiRedstoneControl redstoneControl;
 
 	public GuiHydraulicSeparator(ContainerHydraulicSeparator container) {
 		super(container);
 
 		elements.add(energy = new GuiEnergyMeter(151, 6, 18, this, container.tile.getEnergy(), container.tile.getMaxEnergy()));
 		elements.add(fluid = new GuiFluidTank(6, 6, 18, this, container.tile.getTank().getFluid(), TileEntityHydraulicSeparator.maxWater));
+		elements.add(redstoneControl = new GuiRedstoneControl(xSize, 5, 18, 18, "jari.gui.element.redstoneControl", this, container.tile, 0));
+	
+		redstoneControl.setTextDirection(true);
 	}
 
 	/**

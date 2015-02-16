@@ -31,7 +31,7 @@ public class HydraulicSeparatorCraftingHandler {
 		instance.addRecipe("oreSilver", "dustSilver", 3, 5000, 1200);
 		instance.addRecipe("oreLead", "dustLead", 3, 5000, 1000);
 		instance.addRecipe("oreNickel", "dustNickel", 3, 5000, 1000);
-		instance.addRecipe("orePlatinum", "dustPlatinum", 3, 5000, 1000);
+		instance.addRecipe("orePlatinum", "dustPlatinum", 64, 5000, 1000);
 	}
 
 	/**

@@ -38,6 +38,21 @@ public class GuiJARI<T extends Container> extends GuiContainer {
 		}
 	}
 	
+	@Override
+	protected void mouseClicked(int guiX, int guiY, int mouseButton) {
+		for (GuiElement e : elements) {
+			if (e.isPointIn(guiX - guiLeft, guiY - guiTop) && e.onClick(guiX - guiLeft, guiY - guiTop, mouseButton))
+				break;
+		}
+		
+		super.mouseClicked(guiX, guiY, mouseButton);
+		//0 = left, 1 = right, 2 = middle
+	}
+	
+	public T getContainer() {
+		return container;
+	}
+	
 	public int getGuiLeft() {
 		return guiLeft;
 	}

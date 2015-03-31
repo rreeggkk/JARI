@@ -101,7 +101,7 @@ public class ContainerHydraulicSeparator extends Container {
 	}
 	
 	/**
-	 * Used to sync client->server
+	 * Used to sync client to server
 	 * Only occurs 
 	 */
 	@Override

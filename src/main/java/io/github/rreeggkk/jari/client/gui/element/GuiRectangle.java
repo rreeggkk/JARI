@@ -5,8 +5,6 @@ import io.github.rreeggkk.jari.common.util.TextHelper;
 
 import java.util.ArrayList;
 
-import com.sun.org.apache.xml.internal.security.utils.I18n;
-
 public class GuiRectangle extends GuiElement{
 	protected String text;
 	protected boolean textDirection;

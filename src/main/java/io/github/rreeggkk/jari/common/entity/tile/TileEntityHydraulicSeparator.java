@@ -47,7 +47,6 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 	public void updateEntity() {
 		// worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord,
 		// worldObj.getBlockMetadata(xCoord, yCoord, zCoord), 2);
-		JARI.logger.error("PowerMode status: " + powerMode);
 		if (!worldObj.isRemote && isRedstoneModeActive()) {
 			
 			if (inventory[0] != null

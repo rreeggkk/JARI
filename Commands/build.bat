@@ -5,4 +5,4 @@ gradlew.bat clean
 
 gradlew.bat build
 
-gradlew.bat copyNativesLegacy
+gradlew.bat extractNatives

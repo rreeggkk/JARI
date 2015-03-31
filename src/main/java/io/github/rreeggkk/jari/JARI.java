@@ -4,6 +4,7 @@ import io.github.rreeggkk.jari.client.creativetabs.CustomCreativeTab;
 import io.github.rreeggkk.jari.client.gui.GuiHandler;
 import io.github.rreeggkk.jari.common.block.BlockRecipeRegistry;
 import io.github.rreeggkk.jari.common.block.BlockRegistry;
+import io.github.rreeggkk.jari.common.command.MetalLumpCommand;
 import io.github.rreeggkk.jari.common.item.ItemRecipeRegistry;
 import io.github.rreeggkk.jari.common.item.ItemRegistry;
 import io.github.rreeggkk.jari.common.proxy.CommonProxy;
@@ -16,7 +17,6 @@ import io.github.rreeggkk.jari.common.util.TextHelper;
 
 import java.util.Random;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +29,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -94,9 +95,6 @@ public class JARI {
 		logger.info(TextHelper.localize("info." + ModInformation.ID
 				+ ".console.load.init"));
 
-		//Load item and block recipes
-		ItemRecipeRegistry.registerItemRecipes();
-		BlockRecipeRegistry.registerBlockRecipes();
 	}
 
 	@Mod.EventHandler
@@ -104,5 +102,17 @@ public class JARI {
 		//Log the beggining of postinit
 		logger.info(TextHelper.localize("info." + ModInformation.ID
 				+ ".console.load.postInit"));
+
+		//Load item and block recipes
+		ItemRecipeRegistry.registerItemRecipes();
+		BlockRecipeRegistry.registerBlockRecipes();
+	}
+
+	@Mod.EventHandler
+	public void serverStart(FMLServerStartingEvent event)
+	{
+		logger.info(TextHelper.localize("info." + ModInformation.ID
+				+ ".console.load.serverStart"));
+		event.registerServerCommand(new MetalLumpCommand());
 	}
 }

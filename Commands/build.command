@@ -6,4 +6,4 @@ cd ../
 
 ./gradlew build
 
-./gradlew copyNativesLegacy
+./gradlew extractNatives

@@ -15,6 +15,7 @@ jari.gui.element.redstoneControl.always=Redstone Control (Always On)
 jari.gui.element.redstoneControl.never=Redstone Control (Never On)
 
 #ITEMS
+item.jari.metal.name=Lump of Metal
 
 #TOOLTIPS
 
@@ -23,3 +24,4 @@ info.jari.console.config.refresh=Refreshing configuration file.
 info.jari.console.load.preInit=Begin Pre-initialization
 info.jari.console.load.init=Begin Initialization
 info.jari.console.load.postInit=Begin Post-initialization
+info.jari.console.load.serverStart=Server Staring Up

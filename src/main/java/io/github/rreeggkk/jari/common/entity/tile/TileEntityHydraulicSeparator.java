@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
-		ISidedInventory, IFluidHandler, IRedstoneControllable {
+		ISidedInventory, IFluidHandler, IRedstoneControllable, IEnergyAccessable {
 	public static final int maxWater = 16 * 1000;
 
 	private FluidTank tank;
@@ -40,7 +40,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		inventory = new ItemStack[2];
 		storage = new EnergyStorage(100000);
 		tank = new FluidTank(maxWater);
-		powerMode = RedstonePowerMode.REQUIRED_ON;
+		powerMode = RedstonePowerMode.REQUIRED_OFF;
 	}
 
 	@Override
@@ -177,24 +177,26 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 
 			ItemStack itemstack = r.getResult(inventory[0]);
 
-			if (inventory[1] == null) {
-				inventory[1] = itemstack.copy();
-			} else if (inventory[1].getItem() == itemstack.getItem()) {
-				inventory[1].stackSize += itemstack.stackSize; // Forge BugFix:
-																// Results may
-																// have multiple
-																// items
+			if (itemstack != null) {
+				if (inventory[1] == null) {
+					inventory[1] = itemstack.copy();
+				} else if (inventory[1].getItem() == itemstack.getItem()) {
+					inventory[1].stackSize += itemstack.stackSize; // Forge BugFix:
+																	// Results may
+																	// have multiple
+																	// items
+				}
+
+				--inventory[0].stackSize;
+
+				if (inventory[0].stackSize <= 0) {
+					inventory[0] = null;
+				}
+
+				tank.drain(r.getRequiredWater(), true);
+
+				return r.getRequiredEnergy();
 			}
-
-			--inventory[0].stackSize;
-
-			if (inventory[0].stackSize <= 0) {
-				inventory[0] = null;
-			}
-
-			tank.drain(r.getRequiredWater(), true);
-
-			return r.getRequiredEnergy();
 		}
 		return 0;
 	}

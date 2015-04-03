@@ -1,32 +1,23 @@
 package io.github.rreeggkk.jari.client.gui.element;
 
-import io.github.rreeggkk.jari.client.gui.container.GuiJARI;
+import io.github.rreeggkk.jari.client.gui.container.JARIGuiScreen;
+import io.github.rreeggkk.jari.common.entity.tile.IEnergyAccessable;
 
 public class GuiEnergyMeter extends GuiRectangle {
 	
-	protected int energy;
-	protected int maxAmount;
+	protected IEnergyAccessable energyTile;
 
-	public GuiEnergyMeter(int x, int y, int w, GuiJARI<?> g, int e, int max) {
+	public GuiEnergyMeter(int x, int y, int w, JARIGuiScreen<?> g, IEnergyAccessable energyTile) {
 		super(x, y, w, 73, g);
-		energy = e;
-		maxAmount = max;
+		this.energyTile = energyTile;
 	}
 	
 	public int getEnergy() {
-		return energy;
-	}
-	
-	public void setEnergy(int energy) {
-		this.energy = energy;
-	}
-	
-	public void setMaxAmount(int maxAmount) {
-		this.maxAmount = maxAmount;
+		return energyTile.getEnergy();
 	}
 	
 	public int getMaxAmount() {
-		return maxAmount;
+		return energyTile.getMaxEnergy();
 	}
 	
 	@Override
@@ -37,7 +28,7 @@ public class GuiEnergyMeter extends GuiRectangle {
 
 		gui.drawTexturedModalRect(gui.getGuiLeft() + x, gui.getGuiTop() + y, 54, 0, 18, 73);
 		
-		int energySize = (int) ((float) energy * 71 / maxAmount);
+		int energySize = (int) ((float) getEnergy() * 71 / getMaxAmount());
 		gui.drawTexturedModalRect(
 				gui.getGuiLeft() + x+1, gui.getGuiTop() + y+1 + (71 - energySize),
 				72, 72 - energySize,
@@ -47,7 +38,7 @@ public class GuiEnergyMeter extends GuiRectangle {
 	
 	@Override
 	public void drawForegroundLayer(int x, int y) {
-		text = energy + "/" + maxAmount + " RF";
+		text = getEnergy() + "/" + getMaxAmount() + " RF";
 		super.drawForegroundLayer(x, y);
 	}
 }

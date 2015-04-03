@@ -119,7 +119,7 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int hitx, float hity, float hitz, float side) {
-		
+
 		//Get the tile entity
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		//If the tile entity doesn't exsist or the player is sneaking
@@ -133,10 +133,11 @@ public class BlockHydraulicSeparator extends BlockContainer {
 			//If it works stop everything else
 			return true;
 		}
-		
+
 		//Open the GUI
 		player.openGui(JARI.instance, GuiIDs.HYDRAULIC_SEPARATOR, world, x, y,
 				z);
+
 		//Stop any other right click actions
 		return true;
 	}
@@ -147,7 +148,7 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	 */
 	public static void updateBlockState(boolean isRunning, World world, int x,
 			int y, int z) {
-		
+
 		//Metadata
 		int l = world.getBlockMetadata(x, y, z);
 		//TileEntity
@@ -182,7 +183,7 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z,
 			EntityLivingBase e, ItemStack item) {
-		
+
 		//Determine the direction
 		int l = MathHelper
 				.floor_double(e.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
@@ -238,7 +239,7 @@ public class BlockHydraulicSeparator extends BlockContainer {
 
 						//Decrease itemstack size
 						itemstack.stackSize -= j1;
-						
+
 						//Create a new item entity
 						EntityItem entityitem = new EntityItem(world, x + f, y
 								+ f1, z + f2, new ItemStack(

@@ -1,24 +1,24 @@
 package io.github.rreeggkk.jari.client.gui.element;
 
+import io.github.rreeggkk.jari.client.gui.RenderUtils;
+import io.github.rreeggkk.jari.client.gui.container.JARIGuiScreen;
+import io.github.rreeggkk.jari.common.reference.ModInformation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import io.github.rreeggkk.jari.client.gui.RenderUtils;
-import io.github.rreeggkk.jari.client.gui.container.GuiJARI;
-import io.github.rreeggkk.jari.common.reference.ModInformation;
 
 public abstract class GuiElement {
 	public static final ResourceLocation elementTextures = new ResourceLocation(
 			ModInformation.ID + ":textures/gui/guiElements.png");
 	protected int x,y,w,h;
-	protected GuiJARI<?> gui;
+	protected JARIGuiScreen<?> gui;
 	
-	public GuiElement(GuiJARI<?> g) {
+	public GuiElement(JARIGuiScreen<?> g) {
 		this(0,0,0,0, g);
 	}
-	public GuiElement(int x, int y, int w, int h, GuiJARI<?> g) {
+	public GuiElement(int x, int y, int w, int h, JARIGuiScreen<?> g) {
 		this.x = x;
 		this.y = y;
 		this.h = h;

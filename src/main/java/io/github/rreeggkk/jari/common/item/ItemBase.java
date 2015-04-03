@@ -16,5 +16,6 @@ public class ItemBase extends Item {
 
 		setUnlocalizedName(ModInformation.ID + "." + unlocName);
 		setCreativeTab(JARI.tabRreeactors);
+		setTextureName(ModInformation.ID + ":" + unlocName);
 	}
 }

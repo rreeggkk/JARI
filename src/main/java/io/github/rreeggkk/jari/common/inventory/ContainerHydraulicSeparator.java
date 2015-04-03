@@ -16,6 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ContainerHydraulicSeparator extends Container {
 	public TileEntityHydraulicSeparator tile;
 	private int lastCook, lastEnergy, lastStartEnergy, lastWaterAmount, lastPowerIndex;
+	
 
 	public ContainerHydraulicSeparator(InventoryPlayer player,
 			TileEntityHydraulicSeparator tilee) {

@@ -11,8 +11,9 @@ import io.github.rreeggkk.jari.common.proxy.CommonProxy;
 import io.github.rreeggkk.jari.common.reference.ModInformation;
 import io.github.rreeggkk.jari.common.util.ConfigHandler;
 import io.github.rreeggkk.jari.common.util.EventHandler;
-import io.github.rreeggkk.jari.common.util.GenerationHandler;
 import io.github.rreeggkk.jari.common.util.OreDictHandler;
+import io.github.rreeggkk.jari.common.util.OreGenData;
+import io.github.rreeggkk.jari.common.util.RreeOreGenerator;
 import io.github.rreeggkk.jari.common.util.TextHelper;
 
 import java.util.Random;
@@ -52,6 +53,8 @@ public class JARI {
 	public static Logger logger = LogManager.getLogger(ModInformation.NAME);
 	//The random
 	public static Random random = new Random();
+	
+	private RreeOreGenerator oreGenerator;
 
 	//Mod instance
 	@Instance
@@ -86,7 +89,9 @@ public class JARI {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
 		//Register the mod's world generation handler
-		GameRegistry.registerWorldGenerator(new GenerationHandler(), 2);
+		GameRegistry.registerWorldGenerator(oreGenerator = new RreeOreGenerator(), 2);
+		
+		oreGenerator.addOreGenToSurface(new OreGenData(255, 0, 25, 3, BlockRegistry.blockRadioactiveStone));
 	}
 
 	@Mod.EventHandler

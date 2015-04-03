@@ -7,65 +7,36 @@ import java.util.ArrayList;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 
-public class GuiJARI<T extends Container> extends GuiContainer {
-	protected T container;
-	protected int guiLeft;
-	protected int guiTop;
+public class GuiJARI<T extends Container>{
 	protected ArrayList<GuiElement> elements;
+	protected JARIGuiScreen<T> mainScreen;
 
-	public GuiJARI(T container) {
-		super(container);
-		this.container = container;
+	public GuiJARI(JARIGuiScreen<T> mainScreen) {
 		elements = new ArrayList<GuiElement>();
+		this.mainScreen = mainScreen;
 	}
 
 	/**
 	 * Draw the foreground layer for the GuiContainer (everything in front of
 	 * the items)
 	 */
-	@Override
-	protected void drawGuiContainerForegroundLayer(int x, int y) {
+	protected void drawForeground(int x, int y) {
 		for (GuiElement e : elements) {
 			e.drawForegroundLayer(x, y);
 		}
 	}
-
-	@Override
-	protected void drawGuiContainerBackgroundLayer(float f1, int f2, int f3) {
-		
+	protected void drawBackground(float f1, int f2, int f3) {
 		for (GuiElement e : elements) {
 			e.drawBackgroundLayer(f1, f2, f3);
 		}
 	}
 	
-	@Override
 	protected void mouseClicked(int guiX, int guiY, int mouseButton) {
 		for (GuiElement e : elements) {
-			if (e.isPointIn(guiX - guiLeft, guiY - guiTop) && e.onClick(guiX - guiLeft, guiY - guiTop, mouseButton))
+			if (e.isPointIn(guiX - mainScreen.guiLeft, guiY - mainScreen.guiTop) && e.onClick(guiX - mainScreen.guiLeft, guiY - mainScreen.guiTop, mouseButton))
 				break;
 		}
-		
-		super.mouseClicked(guiX, guiY, mouseButton);
-		//0 = left, 1 = right, 2 = middle
-	}
-	
-	public T getContainer() {
-		return container;
-	}
-	
-	public int getGuiLeft() {
-		return guiLeft;
-	}
-	
-	public int getGuiTop() {
-		return guiTop;
-	}
-	
-	public float getZLevel() {
-		return zLevel;
-	}
 
-	public void drawHoveringText(ArrayList<String> list, int i, int j) {
-		this.drawHoveringText(list, i, j, fontRendererObj);
+		//0 = left, 1 = right, 2 = middle
 	}
 }

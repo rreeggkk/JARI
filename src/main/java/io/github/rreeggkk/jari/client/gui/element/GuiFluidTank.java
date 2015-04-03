@@ -1,32 +1,15 @@
 package io.github.rreeggkk.jari.client.gui.element;
 
-import io.github.rreeggkk.jari.client.gui.container.GuiJARI;
-import net.minecraftforge.fluids.FluidStack;
+import io.github.rreeggkk.jari.client.gui.container.JARIGuiScreen;
+import net.minecraftforge.fluids.FluidTank;
 
 public class GuiFluidTank extends GuiRectangle {
 	
-	protected FluidStack fluid;
-	protected int maxAmount;
+	protected FluidTank fluid;
 
-	public GuiFluidTank(int x, int y, int w, GuiJARI<?> g, FluidStack f, int max) {
+	public GuiFluidTank(int x, int y, int w, JARIGuiScreen<?> g, FluidTank f) {
 		super(x, y, w, 73, g);
 		fluid = f;
-		maxAmount = max;
-	}
-	
-	public FluidStack getFluid() {
-		return fluid;
-	}
-	public void setFluid(FluidStack fluid) {
-		this.fluid = fluid;
-	}
-	
-	public void setMaxAmount(int maxAmount) {
-		this.maxAmount = maxAmount;
-	}
-	
-	public int getMaxAmount() {
-		return maxAmount;
 	}
 	
 	@Override
@@ -37,9 +20,9 @@ public class GuiFluidTank extends GuiRectangle {
 
 		gui.drawTexturedModalRect(gui.getGuiLeft() + x, gui.getGuiTop() + y, 0, 0, 18, 73);
 		
-		if (fluid != null) {
-			int waterSize = (int) ((float) fluid.amount * 71 / maxAmount);
-			drawFluid(fluid,
+		if (fluid != null && fluid.getFluid() != null) {
+			int waterSize = (int) ((float) fluid.getFluid().amount * 71 / fluid.getCapacity());
+			drawFluid(fluid.getFluid(),
 					gui.getGuiLeft() + x+1, gui.getGuiTop() + y+1 + (71 - waterSize),
 					16, waterSize,
 					71);
@@ -52,10 +35,10 @@ public class GuiFluidTank extends GuiRectangle {
 	
 	@Override
 	public void drawForegroundLayer(int x, int y) {
-		if (fluid != null) {
-			text = fluid.amount + "/" + maxAmount + " mB";
+		if (fluid != null && fluid.getFluid() != null) {
+			text = fluid.getFluid().amount + "/" + fluid.getCapacity() + " mB";
 		} else {
-			text = "0/" + maxAmount + " mB";
+			text = "0/" + fluid.getCapacity() + " mB";
 		}
 		super.drawForegroundLayer(x, y);
 	}

@@ -1,6 +1,5 @@
 package io.github.rreeggkk.jari.common.entity.tile;
 
-import io.github.rreeggkk.jari.JARI;
 import io.github.rreeggkk.jari.common.crafting.hydraulic.HydraulicSeparatorCraftingHandler;
 import io.github.rreeggkk.jari.common.crafting.hydraulic.IHydraulicRecipe;
 import io.github.rreeggkk.jari.common.enums.RedstonePowerMode;
@@ -24,7 +23,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
-		ISidedInventory, IFluidHandler, IRedstoneControllable, IEnergyAccessable {
+		ISidedInventory, IFluidHandler, IRedstoneControllable,
+		IEnergyAccessable {
 	public static final int maxWater = 16 * 1000;
 
 	private FluidTank tank;
@@ -48,7 +48,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		// worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord,
 		// worldObj.getBlockMetadata(xCoord, yCoord, zCoord), 2);
 		if (!worldObj.isRemote && isRedstoneModeActive()) {
-			
+
 			if (inventory[0] != null
 					&& (inventory[0].getItem() != lastItemInMachine || inventory[0]
 							.getItemDamage() != lastItemMetaInMachine)) {
@@ -102,9 +102,11 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 			case ALWAYS_OFF:
 				return false;
 			case REQUIRED_ON:
-				return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+				return worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord,
+						zCoord);
 			case REQUIRED_OFF:
-				return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+				return !worldObj.isBlockIndirectlyGettingPowered(xCoord,
+						yCoord, zCoord);
 		}
 		return false;
 	}
@@ -147,7 +149,8 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 
 		currentProcessEnergy = compound.getInteger("Progress");
 		processStartEnergy = compound.getInteger("Start");
-		powerMode = RedstonePowerMode.getFromIndex(compound.getInteger("PowerMode"));
+		powerMode = RedstonePowerMode.getFromIndex(compound
+				.getInteger("PowerMode"));
 	}
 
 	@Override
@@ -181,10 +184,13 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 				if (inventory[1] == null) {
 					inventory[1] = itemstack.copy();
 				} else if (inventory[1].getItem() == itemstack.getItem()) {
-					inventory[1].stackSize += itemstack.stackSize; // Forge BugFix:
-																	// Results may
-																	// have multiple
-																	// items
+					inventory[1].stackSize += itemstack.stackSize; // Forge
+																	// BugFix:
+					// Results
+					// may
+					// have
+					// multiple
+					// items
 				}
 
 				--inventory[0].stackSize;
@@ -240,12 +246,12 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 			int result = inventory[1].stackSize + itemstack.stackSize;
 			return result <= getInventoryStackLimit()
 					&& result <= inventory[1].getMaxStackSize(); // Forge
-																	// BugFix:
-																	// Make it
-																	// respect
-																	// stack
-																	// sizes
-																	// properly.
+			// BugFix:
+			// Make it
+			// respect
+			// stack
+			// sizes
+			// properly.
 		}
 	}
 
@@ -367,7 +373,9 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 	}
 
 	public boolean isRunning() {
-		return isRedstoneModeActive() && (currentProcessEnergy != 0 && canProcess() && storage.getEnergyStored() >= getCurrentEnergyPerTick());
+		return isRedstoneModeActive() && currentProcessEnergy != 0
+				&& canProcess()
+				&& storage.getEnergyStored() >= getCurrentEnergyPerTick();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -411,10 +419,12 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		this.tank = tank;
 	}
 
+	@Override
 	public int getEnergy() {
 		return storage.getEnergyStored();
 	}
 
+	@Override
 	public int getMaxEnergy() {
 		return storage.getMaxEnergyStored();
 	}
@@ -473,12 +483,12 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 	public int getComparatorOutput() {
 		return 0;
 	}
-	
+
 	@Override
 	public RedstonePowerMode getPowerMode() {
 		return powerMode;
 	}
-	
+
 	@Override
 	public void setPowerMode(RedstonePowerMode powerMode) {
 		this.powerMode = powerMode;

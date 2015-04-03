@@ -32,13 +32,13 @@ public class HydraulicSeparatorCraftingHandler {
 		instance.addRecipe("oreLead", "dustLead", 3, 5000, 1000);
 		instance.addRecipe("oreNickel", "dustNickel", 3, 5000, 1000);
 		instance.addRecipe("orePlatinum", "dustPlatinum", 64, 5000, 1000);
-		
+
 		instance.addRecipe(new RadioactiveStoneHydraulicRecipe());
 	}
 
 	/**
 	 * Adds a non-OreDictionary recipe
-	 * 
+	 *
 	 * @param input
 	 *            ItemStack (Will use Item type and quantity)
 	 * @param output
@@ -55,7 +55,7 @@ public class HydraulicSeparatorCraftingHandler {
 
 	/**
 	 * Adds an OreDictionary recipe
-	 * 
+	 *
 	 * @param input
 	 *            String OreDictionary entry
 	 * @param output
@@ -71,7 +71,7 @@ public class HydraulicSeparatorCraftingHandler {
 
 	/**
 	 * Adds an OreDictionary recipe
-	 * 
+	 *
 	 * @param input
 	 *            String OreDictionary entry
 	 * @param output
@@ -91,7 +91,7 @@ public class HydraulicSeparatorCraftingHandler {
 
 	/**
 	 * Adds an OreDictionary recipe
-	 * 
+	 *
 	 * @param input
 	 *            String OreDictionary entry
 	 * @param inputNum
@@ -113,7 +113,7 @@ public class HydraulicSeparatorCraftingHandler {
 
 	/**
 	 * Add a custom recipe
-	 * 
+	 *
 	 * @param r
 	 *            the recipe to add
 	 */
@@ -123,7 +123,7 @@ public class HydraulicSeparatorCraftingHandler {
 
 	/**
 	 * Get the recipe that accepts the ItemStack as input
-	 * 
+	 *
 	 * @param input
 	 *            ItemStack input for recipe
 	 * @return a recipe that accepts the ItemStack or null

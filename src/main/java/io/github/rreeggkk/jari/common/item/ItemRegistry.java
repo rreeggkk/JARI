@@ -8,13 +8,13 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * Keep that in mind if you like nicely organized creative tabs.
  */
 
-
 public class ItemRegistry {
 
 	// Items
 	public static ItemLumpOfMetal metalLump;
 
 	public static void registerItems() {
-		GameRegistry.registerItem(metalLump = new ItemLumpOfMetal(), "metalLump");
+		GameRegistry.registerItem(metalLump = new ItemLumpOfMetal(),
+				"metalLump");
 	}
 }

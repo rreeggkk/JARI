@@ -35,68 +35,72 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
- * 
+ *
  * @author rreeggkk
  *
  */
 @Mod(modid = ModInformation.ID, name = ModInformation.NAME, version = ModInformation.VERSION, dependencies = ModInformation.DEPEND, guiFactory = ModInformation.GUIFACTORY)
 public class JARI {
 
-	//The proxy
+	// The proxy
 	@SidedProxy(clientSide = ModInformation.CLIENTPROXY, serverSide = ModInformation.COMMONPROXY)
 	public static CommonProxy proxy;
 
-	//The creative tab
+	// The creative tab
 	public static CustomCreativeTab tabRreeactors = new CustomCreativeTab(
 			ModInformation.ID + ".creativeTab");
-	//The logger
+	// The logger
 	public static Logger logger = LogManager.getLogger(ModInformation.NAME);
-	//The random
+	// The random
 	public static Random random = new Random();
-	
+
 	private RreeOreGenerator oreGenerator;
 
-	//Mod instance
+	// Mod instance
 	@Instance
 	public static JARI instance;
 
 	/**
 	 * Pre init method
-	 * @param event FML's pre init event
+	 * 
+	 * @param event
+	 *            FML's pre init event
 	 */
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		//Log the beggining of preinit
+		// Log the beggining of preinit
 		logger.info(TextHelper.localize("info." + ModInformation.ID
 				+ ".console.load.preInit"));
 
-		//Initialize or config
+		// Initialize or config
 		ConfigHandler.init(event.getSuggestedConfigurationFile());
 
-		//Load items and blocks
+		// Load items and blocks
 		ItemRegistry.registerItems();
 		BlockRegistry.registerBlocks();
 
-		//Set reactor tab icon
+		// Set reactor tab icon
 		tabRreeactors.setIcon(Item
 				.getItemFromBlock(BlockRegistry.blockHydraulicSeparator));
 
-		//Do ore dictionary registry
+		// Do ore dictionary registry
 		OreDictHandler.registerOreDict();
-		//Register the mod's event handler
+		// Register the mod's event handler
 		FMLCommonHandler.instance().bus().register(new EventHandler());
-		//Register the mod's gui handler
+		// Register the mod's gui handler
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
-		//Register the mod's world generation handler
-		GameRegistry.registerWorldGenerator(oreGenerator = new RreeOreGenerator(), 2);
-		
-		oreGenerator.addOreGenToSurface(new OreGenData(255, 0, 25, 3, BlockRegistry.blockRadioactiveStone));
+		// Register the mod's world generation handler
+		GameRegistry.registerWorldGenerator(
+				oreGenerator = new RreeOreGenerator(), 2);
+
+		oreGenerator.addOreGenToSurface(new OreGenData(255, 0, 25, 3,
+				BlockRegistry.blockRadioactiveStone));
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-		//Log the beggining of init
+		// Log the beggining of init
 		logger.info(TextHelper.localize("info." + ModInformation.ID
 				+ ".console.load.init"));
 
@@ -104,18 +108,17 @@ public class JARI {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		//Log the beggining of postinit
+		// Log the beggining of postinit
 		logger.info(TextHelper.localize("info." + ModInformation.ID
 				+ ".console.load.postInit"));
 
-		//Load item and block recipes
+		// Load item and block recipes
 		ItemRecipeRegistry.registerItemRecipes();
 		BlockRecipeRegistry.registerBlockRecipes();
 	}
 
 	@Mod.EventHandler
-	public void serverStart(FMLServerStartingEvent event)
-	{
+	public void serverStart(FMLServerStartingEvent event) {
 		logger.info(TextHelper.localize("info." + ModInformation.ID
 				+ ".console.load.serverStart"));
 		event.registerServerCommand(new MetalLumpCommand());

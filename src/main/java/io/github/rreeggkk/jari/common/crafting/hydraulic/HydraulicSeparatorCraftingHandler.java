@@ -12,8 +12,6 @@ public class HydraulicSeparatorCraftingHandler {
 	private ArrayList<IHydraulicRecipe> recipes = new ArrayList<IHydraulicRecipe>();
 
 	static {
-		instance.addRecipe(new ItemStack(Blocks.log), new ItemStack(
-				Blocks.planks), 50000, 16000);
 		instance.addRecipe("oreGold", "dustGold", 3, 5000, 1400);
 		instance.addRecipe("oreIron", "dustIron", 3, 5000, 1000);
 		instance.addRecipe("oreCopper", "dustCopper", 3, 5000, 800);
@@ -31,7 +29,7 @@ public class HydraulicSeparatorCraftingHandler {
 		instance.addRecipe("oreSilver", "dustSilver", 3, 5000, 1200);
 		instance.addRecipe("oreLead", "dustLead", 3, 5000, 1000);
 		instance.addRecipe("oreNickel", "dustNickel", 3, 5000, 1000);
-		instance.addRecipe("orePlatinum", "dustPlatinum", 64, 5000, 1000);
+		instance.addRecipe("orePlatinum", "dustPlatinum", 3, 5000, 1000);
 
 		instance.addRecipe(new RadioactiveStoneHydraulicRecipe());
 	}

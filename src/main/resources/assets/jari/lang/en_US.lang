@@ -6,6 +6,7 @@ gui.jari.config.title=JARI Configuration
 
 #BLOCKS
 tile.blockHydraulicSeparator.name=Hydraulic Separator
+jari.blockRadioactiveStone.name=Radioactive Stone
 
 #GUI
 tileEntity.rreeHydraulicSeparator.name=Hydraulic Separator

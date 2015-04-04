@@ -1,12 +1,13 @@
 package io.github.rreeggkk.jari.client.gui.container;
 
 import io.github.rreeggkk.jari.client.gui.element.GuiElement;
+import io.github.rreeggkk.jari.common.inventory.ITileContainer;
 
 import java.util.ArrayList;
 
 import net.minecraft.inventory.Container;
 
-public class GuiJARI<T extends Container> {
+public class GuiJARI<T extends Container & ITileContainer> {
 	protected ArrayList<GuiElement> elements;
 	protected JARIGuiScreen<T> mainScreen;
 

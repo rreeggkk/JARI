@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 
 /**
- * A base for every block
+ * A base for every block. Used to create any block.
  * 
  * @author rreeggkk
  *

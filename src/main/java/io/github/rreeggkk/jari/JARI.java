@@ -37,12 +37,14 @@ import cpw.mods.fml.common.registry.GameRegistry;
 /**
  *
  * @author rreeggkk
+ * 
+ * The main file for the JARI mod.
  *
  */
 @Mod(modid = ModInformation.ID, name = ModInformation.NAME, version = ModInformation.VERSION, dependencies = ModInformation.DEPEND, guiFactory = ModInformation.GUIFACTORY)
 public class JARI {
 
-	// The proxy
+	// The mod's proxy
 	@SidedProxy(clientSide = ModInformation.CLIENTPROXY, serverSide = ModInformation.COMMONPROXY)
 	public static CommonProxy proxy;
 
@@ -98,6 +100,11 @@ public class JARI {
 				BlockRegistry.blockRadioactiveStone));
 	}
 
+	/**
+	 * Initialization method
+	 * 
+	 * @param event FML's initialization event
+	 */
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
 		// Log the beggining of init
@@ -106,6 +113,11 @@ public class JARI {
 
 	}
 
+	/**
+	 * Post initialization method
+	 * 
+	 * @param event FML's postinitialization event
+	 */
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		// Log the beggining of postinit
@@ -117,6 +129,11 @@ public class JARI {
 		BlockRecipeRegistry.registerBlockRecipes();
 	}
 
+	/**
+	 * Called when the server starts
+	 * 
+	 * @param event FML's server start event
+	 */
 	@Mod.EventHandler
 	public void serverStart(FMLServerStartingEvent event) {
 		logger.info(TextHelper.localize("info." + ModInformation.ID

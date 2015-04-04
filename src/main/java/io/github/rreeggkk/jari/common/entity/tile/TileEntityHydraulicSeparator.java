@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		ISidedInventory, IFluidHandler, IRedstoneControllable,
-		IEnergyAccessable {
+		IEnergyAccessable{
 	public static final int maxWater = 16 * 1000;
 
 	private FluidTank tank;
@@ -348,7 +348,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		return new int[] { side == 0 ? 1 : 0 };
+		return new int[] {0,1};
 	}
 
 	@Override
@@ -493,4 +493,5 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 	public void setPowerMode(RedstonePowerMode powerMode) {
 		this.powerMode = powerMode;
 	}
+
 }

@@ -10,10 +10,11 @@ import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ContainerHydraulicSeparator extends Container {
+public class ContainerHydraulicSeparator extends Container implements ITileContainer{
 	public TileEntityHydraulicSeparator tile;
 	private int lastCook, lastEnergy, lastStartEnergy, lastWaterAmount,
 			lastPowerIndex;
@@ -119,7 +120,11 @@ public class ContainerHydraulicSeparator extends Container {
 	public boolean enchantItem(EntityPlayer player, int action) {
 		// Make sure that only the server acts on the action
 		if (!player.getEntityWorld().isRemote) {
-			tile.setPowerMode(RedstonePowerMode.getNext(tile.getPowerMode()));
+			if (action == 0) {
+				tile.setPowerMode(RedstonePowerMode.getNext(tile.getPowerMode()));
+			} else if (action == 1) {
+				
+			}
 		}
 		return super.enchantItem(player, action);
 	}
@@ -176,5 +181,10 @@ public class ContainerHydraulicSeparator extends Container {
 
 		return itemstack;
 
+	}
+
+	@Override
+	public TileEntity getTileEntity() {
+		return tile;
 	}
 }

@@ -27,7 +27,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  *
- * Based off of the Vanilla Furnace class
+ * The block for the Hydraulic Separator. It is based of of the Vanilla furnace.
  *
  * @author rreeggkk
  *
@@ -38,7 +38,7 @@ public class BlockHydraulicSeparator extends BlockContainer {
 	private IIcon onTexture, offTexture, topTexture;
 
 	/**
-	 * Default constructor
+	 * The construtor for the Hydraulic Separator class
 	 */
 	public BlockHydraulicSeparator() {
 		super(Material.iron);

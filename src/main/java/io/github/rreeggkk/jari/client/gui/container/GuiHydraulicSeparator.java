@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiHydraulicSeparator extends
 		JARIGuiScreen<ContainerHydraulicSeparator> {
-	private static final ResourceLocation guiTextures = new ResourceLocation(
+	private static final ResourceLocation mainGUITexture = new ResourceLocation(
 			ModInformation.ID
 					+ ":textures/gui/container/hydraulicSeparator.png");
 
@@ -64,7 +64,7 @@ public class GuiHydraulicSeparator extends
 			guiLeft = (width - xSize) / 2;
 			guiTop = (height - ySize) / 2;
 
-			mc.getTextureManager().bindTexture(guiTextures);
+			mc.getTextureManager().bindTexture(mainGUITexture);
 			drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 			if (container.tile.isRunning()) {

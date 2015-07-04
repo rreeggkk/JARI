@@ -3,6 +3,7 @@ package io.github.rreeggkk.jari.common.block;
 // General place to register all your blocks.
 
 import io.github.rreeggkk.jari.common.entity.tile.TileEntityHydraulicSeparator;
+import io.github.rreeggkk.jari.common.entity.tile.TileEntityRTG;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -11,6 +12,7 @@ public class BlockRegistry {
 
 	// Blocks
 	public static BlockHydraulicSeparator blockHydraulicSeparator;
+	public static BlockRTG blockRTG;
 	public static BlockBase blockRadioactiveStone;
 
 	public static void registerBlocks() {
@@ -20,6 +22,13 @@ public class BlockRegistry {
 					"blockHydraulicSeparator");
 			GameRegistry.registerTileEntity(TileEntityHydraulicSeparator.class,
 					"tileHydraulicSeparator");
+		}
+		{// Hydraulic Separator
+			GameRegistry.registerBlock(
+					blockRTG = new BlockRTG(),
+					"blockRTG");
+			GameRegistry.registerTileEntity(TileEntityRTG.class,
+					"blockRTG");
 		}
 		{// Radioactive Stone
 			GameRegistry.registerBlock(blockRadioactiveStone = new BlockBase(

@@ -11,6 +11,10 @@ import net.minecraftforge.common.config.Configuration;
 public class ConfigHandler {
 
 	public static Configuration config;
+	
+	
+	public static double RTG_MAX_WEIGHT = 1000;
+	public static double RTGEnergyMultiplier = 0.2;
 
 	// Sections to add to the config
 
@@ -22,6 +26,8 @@ public class ConfigHandler {
 	}
 
 	public static void syncConfig() {
+		RTG_MAX_WEIGHT = config.get(Configuration.CATEGORY_GENERAL + ".balancing.rtg", "RTG_Max_Weight", 1000).getDouble();
+		RTGEnergyMultiplier = config.get(Configuration.CATEGORY_GENERAL + ".balancing.rtg", "Energy_Multiplier", 0.2).getDouble();
 		config.save();
 	}
 }

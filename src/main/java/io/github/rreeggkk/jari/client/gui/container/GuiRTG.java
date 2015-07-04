@@ -1,45 +1,43 @@
 package io.github.rreeggkk.jari.client.gui.container;
 
 import io.github.rreeggkk.jari.client.gui.element.GuiEnergyMeter;
-import io.github.rreeggkk.jari.client.gui.element.GuiFluidTank;
-import io.github.rreeggkk.jari.client.gui.tab.GuiTabRedstoneControl;
-import io.github.rreeggkk.jari.common.inventory.ContainerHydraulicSeparator;
+import io.github.rreeggkk.jari.common.inventory.ContainerRTG;
 import io.github.rreeggkk.jari.common.reference.ModInformation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-public class GuiHydraulicSeparator extends
-		JARIGuiScreen<ContainerHydraulicSeparator> {
+public class GuiRTG extends
+		JARIGuiScreen<ContainerRTG> {
 	private static final ResourceLocation mainGUITexture = new ResourceLocation(
 			ModInformation.ID
-					+ ":textures/gui/container/hydraulicSeparator.png");
+					+ ":textures/gui/container/rtg.png");
 
 	// private GuiEnergyMeter energy;
 	// private GuiFluidTank fluid;
 	// private GuiTabRedstoneControl redstoneControl;
 
-	public GuiHydraulicSeparator(ContainerHydraulicSeparator container) {
+	public GuiRTG(ContainerRTG container) {
 		super(container);
 
 		{
-			GuiJARI<ContainerHydraulicSeparator> mainScreen = new MainGui(this);
+			GuiJARI<ContainerRTG> mainScreen = new MainGui(this);
 			mainScreen.elements.add(new GuiEnergyMeter(151, 6, 18, this,
 					container.tile));
-			mainScreen.elements.add(new GuiFluidTank(6, 6, 18, this,
-					container.tile.getTank()));
+			/*
 			mainScreen.elements
 					.add(new GuiTabRedstoneControl(xSize, 5, 18, 18,
 							"jari.gui.element.redstoneControl", this,
 							container.tile, 0).setTextDirection(true));
+			*/
 			screens.add(mainScreen);
 			currentScreen = mainScreen;
 		}
 	}
 
-	public class MainGui extends GuiJARI<ContainerHydraulicSeparator> {
-		public MainGui(JARIGuiScreen<ContainerHydraulicSeparator> mainScreen) {
+	public class MainGui extends GuiJARI<ContainerRTG> {
+		public MainGui(JARIGuiScreen<ContainerRTG> mainScreen) {
 			super(mainScreen);
 		}
 
@@ -51,8 +49,15 @@ public class GuiHydraulicSeparator extends
 			fontRendererObj.drawString(s,
 					xSize / 2 - fontRendererObj.getStringWidth(s) / 2, 6,
 					4210752);
+			
+			String rft = container.tile.getInfoEnergyPerTick() + " RF/t";
+			fontRendererObj.drawString(rft,
+					xSize / 2 - fontRendererObj.getStringWidth(rft) / 2, 15,
+					4210752);
+			
+			
 			fontRendererObj.drawString(
-					I18n.format("container.inventory", new Object[0]), 28,
+					I18n.format("container.inventory", new Object[0]), 8,
 					ySize - 96 + 2, 4210752);
 			super.drawForeground(x, y);
 		}
@@ -66,16 +71,7 @@ public class GuiHydraulicSeparator extends
 
 			mc.getTextureManager().bindTexture(mainGUITexture);
 			drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
-
-			if (container.tile.isRunning()) {
-				int flameSize = container.tile.getFlameScaled(13);
-				drawTexturedModalRect(guiLeft + 81, guiTop + 63 + 13
-						- flameSize, 176, 13 - flameSize, 14, flameSize);
-				// drawTexturedModalRect(guiLeft + 81, guiTop + 63, 176, 0, 14,
-				// 13);
-				drawTexturedModalRect(guiLeft + 77, guiTop + 36, 176, 14,
-						24 - container.tile.getProgressScaled(24), 17);
-			}
+			
 			super.drawBackground(f1, f2, f3);
 		}
 	}

@@ -6,10 +6,13 @@ gui.jari.config.title=JARI Configuration
 
 #BLOCKS
 tile.blockHydraulicSeparator.name=Hydraulic Separator
-jari.blockRadioactiveStone.name=Radioactive Stone
+tile.jari.blockRadioactiveStone.name=Radioactive Stone
 
-#GUI
+#TILE ENTITY
 tileEntity.rreeHydraulicSeparator.name=Hydraulic Separator
+tileEntity.rreeRTG.name=RTG
+
+#GUI ELEMENTS
 jari.gui.element.redstoneControl.high=Redstone Control (High Required)
 jari.gui.element.redstoneControl.low=Redstone Control (Low Required)
 jari.gui.element.redstoneControl.always=Redstone Control (Always On)

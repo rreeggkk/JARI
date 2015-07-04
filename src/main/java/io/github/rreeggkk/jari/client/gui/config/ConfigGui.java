@@ -5,12 +5,15 @@ package io.github.rreeggkk.jari.client.gui.config;
  */
 
 import io.github.rreeggkk.jari.common.reference.ModInformation;
+import io.github.rreeggkk.jari.common.util.ConfigHandler;
 import io.github.rreeggkk.jari.common.util.TextHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
 
@@ -28,7 +31,8 @@ public class ConfigGui extends GuiConfig {
 
 		// Adds sections declared in ConfigHandler. toLowerCase() is used
 		// because the configuration class automatically does this, so must we.
-
+		list.addAll(new ConfigElement(ConfigHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
+		
 		return list;
 	}
 }

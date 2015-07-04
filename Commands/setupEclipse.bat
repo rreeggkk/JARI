@@ -3,4 +3,4 @@ cd ..\
 
 gradlew.bat setupDecompWorkspace
 
-gradlew.bat eclipse
+gradlew.bat eclipse/Users/sergeys/Desktop/stuff/MinecraftStuffs/Minecraft Modding/Nuclear Power/Commands/setupEclipse.command

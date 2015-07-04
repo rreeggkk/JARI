@@ -1,10 +1,10 @@
 package io.github.rreeggkk.jari;
 
 import io.github.rreeggkk.jari.client.creativetabs.CustomCreativeTab;
-import io.github.rreeggkk.jari.client.gui.GuiHandler;
 import io.github.rreeggkk.jari.common.block.BlockRecipeRegistry;
 import io.github.rreeggkk.jari.common.block.BlockRegistry;
 import io.github.rreeggkk.jari.common.command.MetalLumpCommand;
+import io.github.rreeggkk.jari.common.gui.GuiHandler;
 import io.github.rreeggkk.jari.common.item.ItemRecipeRegistry;
 import io.github.rreeggkk.jari.common.item.ItemRegistry;
 import io.github.rreeggkk.jari.common.proxy.CommonProxy;

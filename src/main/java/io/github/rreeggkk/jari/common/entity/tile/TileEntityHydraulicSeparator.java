@@ -28,7 +28,6 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 	public static final int maxWater = 16 * 1000;
 
 	private FluidTank tank;
-
 	private ItemStack[] inventory;
 	private int currentProcessEnergy, processStartEnergy;
 	private Item lastItemInMachine;

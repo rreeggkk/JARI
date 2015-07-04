@@ -21,7 +21,7 @@ import org.ajoberstar.grgit.Grgit
 def gitHash = 'unknown'
 if (new File(projectDir, '.git').exists()) {
     def repo = Grgit.open(project.file('.'))
-    gitHash = repo.log().find().abbreviatedId
+    //gitHash = repo.log().find().abbreviatedId
 }
 
 minecraft {
@@ -34,29 +34,24 @@ minecraft {
 
 repositories {
 	ivy {
-		name "CoFHLib"
-		artifactPattern "http://addons-origin.cursecdn.com/files/2230/207/[module]-[revision].[ext]"
-	}
-	ivy {
 		name "CoFHCore"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2230/210/[module]-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2234/198/[module]-[revision].[ext]"
     }
 	ivy {
 		name "ThermalExpansion"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2230/201/[module]-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2234/200/[module]-[revision].[ext]"
     }
 	ivy {
 		name "ThermalFoundation"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2230/204/[module]-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2233/780/[module]-[revision].[ext]"
     }
     ivy {
     	name "ThermalDynamics"
-    	artifactPattern "http://addons-origin.cursecdn.com/files/2230/217/[module]-[revision].[ext]"
+    	artifactPattern "http://addons-origin.cursecdn.com/files/2233/787/[module]-[revision].[ext]"
     }
 }
 
 dependencies {
-	compile name: 'CoFHLib', version: "${cofhlib_version}", ext: 'jar'
 	compile name: 'CoFHCore', version: "${cofhcore_version}", ext: 'jar'
 	compile name: 'ThermalExpansion', version: "${texpansion_version}", ext: 'jar'
 	compile name: 'ThermalFoundation', version: "${tfoundation_version}", ext: 'jar'

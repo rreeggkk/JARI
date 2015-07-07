@@ -1,6 +1,7 @@
 package io.github.rreeggkk.jari.common.elements.provider;
 
 import io.github.rreeggkk.jari.JARI;
+import io.github.rreeggkk.jari.common.elements.FissionMode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +10,8 @@ public class UraniumProvider extends IElementProvider.BaseProvider {
 
 	private Isotope isotope;
 
-	public UraniumProvider(double spontFiss, Isotope isotope) {
-		super(spontFiss, 400, Double.MAX_VALUE, 0);
+	public UraniumProvider(double spontFiss, double fissEn, Isotope isotope) {
+		super(spontFiss, fissEn, Double.MAX_VALUE, 0);
 		this.isotope = isotope;
 	}
 
@@ -35,6 +36,7 @@ public class UraniumProvider extends IElementProvider.BaseProvider {
 			case U233:
 				return isThermalNeutron ? JARI.random.nextDouble() + 2.6
 						: JARI.random.nextDouble() + 0.5;
+			case U234:
 			case U235:
 				return isThermalNeutron ? JARI.random.nextDouble() + 0.5
 						: JARI.random.nextDouble() + 2.6;
@@ -45,46 +47,71 @@ public class UraniumProvider extends IElementProvider.BaseProvider {
 	}
 
 	@Override
-	public Map<String, Double> doFission(boolean absorbed,
+	public Map<String, Double> doFission(FissionMode fiss,
 			double amountFissioned) {
-		if (absorbed) {
-			switch (isotope) {
-				case U233:
+		switch (fiss) {
+			case ABSORB:
+				switch (isotope) {
+					case U233:
+					case U234:
+						HashMap<String, Double> map = new HashMap<String, Double>();
+						map.put("Uranium-235", amountFissioned);
+						return map;
+					case U235:
+						HashMap<String, Double> map1 = new HashMap<String, Double>();
+						map1.put("Uranium-238", amountFissioned);
+						return map1;
+					case U238:
+						HashMap<String, Double> map11 = new HashMap<String, Double>();
+						if (JARI.random.nextBoolean()) {
+							map11.put("Plutonium-238", amountFissioned);
+						} else {
+							map11.put("Plutonium-239", amountFissioned);
+						}
+						return map11;
+				}
+				break;
+			case FISSION:
+				if (JARI.random.nextBoolean()) {
 					HashMap<String, Double> map = new HashMap<String, Double>();
-					map.put("Uranium-235", amountFissioned);
+					map.put("Krypton-89", amountFissioned / 3.1);
+					map.put("Barium-144", amountFissioned / 3.1);
 					return map;
-				case U235:
-					HashMap<String, Double> map1 = new HashMap<String, Double>();
-					map1.put("Uranium-238", amountFissioned);
-					return map1;
-				case U238:
-					HashMap<String, Double> map11 = new HashMap<String, Double>();
-					if (JARI.random.nextBoolean()) {
-						map11.put("Plutonium-238", amountFissioned);
-					} else {
-						map11.put("Plutonium-239", amountFissioned);
-					}
-					return map11;
-			}
-		} else {
-			switch (isotope) {
-				case U233:
-				case U235:
-				case U238:
-					if (JARI.random.nextBoolean()) {
+				} else {
+					HashMap<String, Double> map = new HashMap<String, Double>();
+					map.put("Strontium-94", amountFissioned / 3.1);
+					map.put("Xenon-140", amountFissioned / 3.1);
+					return map;
+				}
+			case DECAY:
+				switch (isotope) {
+					case U233:
+					{
 						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Krypton-89", amountFissioned / 3.1);
-						map.put("Barium-144", amountFissioned / 3.1);
-						return map;
-					} else {
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Strontium-94", amountFissioned / 3.1);
-						map.put("Xenon-140", amountFissioned / 3.1);
+						map.put("Thorium-229", amountFissioned / 1.1);
 						return map;
 					}
-				default:
-					break;
-			}
+					case U234:
+					{
+						HashMap<String, Double> map = new HashMap<String, Double>();
+						map.put("Thorium-230", amountFissioned / 1.1);
+						return map;
+					}
+					case U235:
+					{
+						HashMap<String, Double> map = new HashMap<String, Double>();
+						map.put("Thorium-231", amountFissioned / 1.1);
+						return map;
+					}
+					case U238:
+					{
+						HashMap<String, Double> map = new HashMap<String, Double>();
+						map.put("Thorium-234", amountFissioned / 1.1);
+						return map;
+					}
+				}
+				break;
+				
 		}
 		return new HashMap<String, Double>();
 	}
@@ -104,6 +131,8 @@ public class UraniumProvider extends IElementProvider.BaseProvider {
 		switch (isotope) {
 			case U233:
 				return 233;
+			case U234:
+				return 234;
 			case U235:
 				return 235;
 			case U238:
@@ -114,6 +143,6 @@ public class UraniumProvider extends IElementProvider.BaseProvider {
 	}
 
 	public enum Isotope {
-		U233, U235, U238;
+		U233, U234, U235, U238;
 	}
 }

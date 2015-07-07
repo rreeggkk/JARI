@@ -25,7 +25,7 @@ public class ConfigGui extends GuiConfig {
 						+ ".config.title"));
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static List<IConfigElement> getConfigElements(GuiScreen parent) {
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
 

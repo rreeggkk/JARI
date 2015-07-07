@@ -1,6 +1,7 @@
 package io.github.rreeggkk.jari.common.entity.tile;
 
 import io.github.rreeggkk.jari.common.elements.ElementRegistry;
+import io.github.rreeggkk.jari.common.elements.FissionMode;
 import io.github.rreeggkk.jari.common.elements.provider.IElementProvider;
 import io.github.rreeggkk.jari.common.item.ItemRegistry;
 import io.github.rreeggkk.jari.common.util.ConfigHandler;
@@ -47,19 +48,17 @@ public class TileEntityRTG extends TileEntity implements ISidedInventory, IEnerg
 						double mass = metalMap.get(element);
 						IElementProvider provider = ElementRegistry.getProviderForElement(element);
 						if (provider != null) {
-							double totalFissChance = mass * provider.getSpontaneousFissionChance()/1000;
-
-							double massDiff = totalFissChance;
+							double gramsFiss = provider.getSpontaneousFissionChance() * 1/20f * 1000 * mass;
 							
-							if (massDiff > mass) {
-								massDiff = mass;
+							if (gramsFiss > mass) {
+								gramsFiss = mass;
 							}
 
-							energyGenerated += provider.getFissionEnergy() * massDiff;
+							energyGenerated += provider.getFissionEnergy() * gramsFiss;
 
-							Map<String, Double> fissProd = provider.doFission(false, massDiff);
+							Map<String, Double> fissProd = provider.doFission(FissionMode.DECAY, gramsFiss);
 							
-							ItemRegistry.metalLump.removeMetalFromLump(inventory[0], element, massDiff);
+							ItemRegistry.metalLump.removeMetalFromLump(inventory[0], element, gramsFiss);
 							
 							for (String newElement : fissProd.keySet()) {
 								ItemRegistry.metalLump.addMetalToLump(inventory[0], newElement, fissProd.get(newElement));

@@ -23,7 +23,6 @@ import net.minecraft.item.Item;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
@@ -88,7 +87,7 @@ public class JARI {
 		// Do ore dictionary registry
 		OreDictHandler.registerOreDict();
 		// Register the mod's event handler
-		FMLCommonHandler.instance().bus().register(new EventHandler());
+		new EventHandler();
 		// Register the mod's gui handler
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 

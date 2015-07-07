@@ -26,7 +26,7 @@ public class ItemLumpOfMetal extends ItemBase {
 		return 1;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player,
 			List information, boolean bool) {
@@ -155,6 +155,7 @@ public class ItemLumpOfMetal extends ItemBase {
 		return amount + (kg ? "kg" : "g");
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
 		// list.clear();
@@ -172,4 +173,17 @@ public class ItemLumpOfMetal extends ItemBase {
 		return 0;
 	}
 
+	public ItemStack getHalf(ItemStack stack) {
+		if (stack != null && stack.getItem() == this) {
+			
+			stack = stack.copy();
+	 		HashMap<String, Double> elements = ItemRegistry.metalLump.getContents(stack);
+	 		for (String str : elements.keySet()) {
+	 	 		ItemRegistry.metalLump.removeMetalFromLump(stack, str, elements.get(str)/2.0);
+	 		}
+	 		
+	 		return stack;
+		}
+		return null;
+	}
 }

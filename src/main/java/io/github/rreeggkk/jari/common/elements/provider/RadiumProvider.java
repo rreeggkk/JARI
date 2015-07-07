@@ -5,23 +5,23 @@ import io.github.rreeggkk.jari.common.elements.FissionMode;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FissionProductsProvider extends IElementProvider.BaseProvider {
+public class RadiumProvider extends IElementProvider.BaseProvider {
 
-	private Product product;
+	private Isotope isotope;
 
-	public FissionProductsProvider(Product product) {
-		super(0, 0, Double.MAX_VALUE, 0);
-		this.product = product;
+	public RadiumProvider(double spontFiss, double fissEn, Isotope isotope) {
+		super(spontFiss, fissEn, Double.MAX_VALUE, 0);
+		this.isotope = isotope;
 	}
 
 	@Override
 	public double getNeutronHitChance(boolean isThermalNeutron) {
-		return 3;
+		return isThermalNeutron ? 1 : 0.1;
 	}
 
 	@Override
 	public double getNeutronAbsorbChance(boolean isThermalNeutron) {
-		return 75;
+		return 0;
 	}
 
 	@Override
@@ -37,6 +37,21 @@ public class FissionProductsProvider extends IElementProvider.BaseProvider {
 	@Override
 	public Map<String, Double> doFission(FissionMode fiss,
 			double amountFissioned) {
+		switch (isotope) {
+			case R224:
+			{
+				HashMap<String, Double> map = new HashMap<String, Double>();
+				map.put("Radon-220", amountFissioned / 1.1);
+				return map;
+			}
+			case R228:
+			{
+				HashMap<String, Double> map = new HashMap<String, Double>();
+				map.put("Radium-224", amountFissioned / 1.1);
+				return map;
+
+			}
+		}
 		return new HashMap<String, Double>();
 	}
 
@@ -49,34 +64,20 @@ public class FissionProductsProvider extends IElementProvider.BaseProvider {
 	public Map<String, Double> getFusionOutput() {
 		return null;
 	}
-	
-	@Override
-	public double getSpontaneousFissionChance() {
-		return super.getSpontaneousFissionChance();
-	}
-	
-	@Override
-	public double getFissionEnergy() {
-		return super.getFissionEnergy();
-	}
-	
+
 	@Override
 	public double getMolarMass() {
-		switch (product) {
-			case B144:
-				return 144;
-			case K89:
-				return 89;
-			case S94:
-				return 94;
-			case X140:
-				return 140;
+		switch (isotope) {
+			case R224:
+				return 224;
+			case R228:
+				return 228;
 			default:
 				return 0;
 		}
 	}
 
-	public enum Product {
-		K89, S94, X140, B144;
+	public enum Isotope {
+		R224, R228;
 	}
 }

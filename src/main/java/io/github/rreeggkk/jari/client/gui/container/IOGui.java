@@ -1,12 +1,9 @@
 package io.github.rreeggkk.jari.client.gui.container;
 
 import io.github.rreeggkk.jari.client.gui.element.GuiIOChanger;
-import io.github.rreeggkk.jari.client.gui.element.GuiRectangle;
 import io.github.rreeggkk.jari.common.entity.tile.IIOControllable;
-import io.github.rreeggkk.jari.common.inventory.ContainerHydraulicSeparator;
 import io.github.rreeggkk.jari.common.inventory.ITileContainer;
 import io.github.rreeggkk.jari.common.reference.ModInformation;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 

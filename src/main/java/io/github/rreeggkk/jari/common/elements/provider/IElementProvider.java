@@ -1,5 +1,7 @@
 package io.github.rreeggkk.jari.common.elements.provider;
 
+import io.github.rreeggkk.jari.common.elements.FissionMode;
+
 import java.util.Map;
 
 public interface IElementProvider {
@@ -10,9 +12,11 @@ public interface IElementProvider {
 	public double getNeutronFissionChance(boolean isThermalNeutron);
 
 	/**
-	 * Get the chance that this element will spontaneously fission (No neutron used) per gram
+	 * Get the chance that this element will spontaneously fission (No neutron used) per kilogram
+	 * Gets the amount of grams per kilogram that will fission per second
+	 * grams fissioned / kilograms total * time (seconds)
 	 * 
-	 * @return [0-1] percent chance to fission/kg (Defines how much matter fissions) (By kilogram)
+	 * @return the amount of grams per kilogram that will fission per second (Defines how much matter fissions)
 	 */
 	public double getSpontaneousFissionChance();
 
@@ -25,7 +29,7 @@ public interface IElementProvider {
 
 	public double getOutputNeutrons(boolean isThermalNeutron);
 
-	public Map<String, Double> doFission(boolean absorbed,
+	public Map<String, Double> doFission(FissionMode fiss,
 			double amountFissioned);
 
 	public double getFusionEnergy();

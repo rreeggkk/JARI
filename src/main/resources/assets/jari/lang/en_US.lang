@@ -5,6 +5,7 @@ itemGroup.jari.creativeTab=JARI
 gui.jari.config.title=JARI Configuration
 
 #BLOCKS
+tile.blockRTG.name=Radioisotope Thermoelectric Generator (RTG)
 tile.blockHydraulicSeparator.name=Hydraulic Separator
 tile.jari.blockRadioactiveStone.name=Radioactive Stone
 

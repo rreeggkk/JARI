@@ -15,7 +15,7 @@ public class MetalLumpCommand implements ICommand {
 	@SuppressWarnings("rawtypes")
 	private List aliases;
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public MetalLumpCommand() {
 		aliases = new ArrayList();
 		aliases.add("getmetallump");
@@ -33,6 +33,7 @@ public class MetalLumpCommand implements ICommand {
 		return "gml [<Element Name/Isotope Name> <Amount>] ...";
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List getCommandAliases() {
 		return aliases;
@@ -69,6 +70,7 @@ public class MetalLumpCommand implements ICommand {
 		return icommandsender.canCommandSenderUseCommand(0, "gml");
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List addTabCompletionOptions(ICommandSender icommandsender,
 			String[] astring) {

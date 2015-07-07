@@ -34,7 +34,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockRTG extends BlockContainer {
 	// Block's textures
 	@SideOnly(Side.CLIENT)
-	private IIcon onTexture, topTexture;
+	private IIcon topTexture;
 
 	/**
 	 * The construtor for the Hydraulic Separator class
@@ -94,8 +94,7 @@ public class BlockRTG extends BlockContainer {
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta) {
 		// Get the correct icon for the side of the block
-		return side == 1 ? topTexture : side != meta / 2 ? blockIcon
-				: onTexture;
+		return side == 1 || side == 0 ? topTexture :  blockIcon;
 	}
 
 	@Override
@@ -104,8 +103,6 @@ public class BlockRTG extends BlockContainer {
 		// Load all textures for the block
 		blockIcon = iconRegistry.registerIcon(ModInformation.ID
 				+ ":rtg_side");
-		onTexture = iconRegistry.registerIcon(ModInformation.ID
-				+ ":rtg_front");
 		topTexture = iconRegistry.registerIcon(ModInformation.ID
 				+ ":rtg_top");
 	}

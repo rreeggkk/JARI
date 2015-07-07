@@ -2,16 +2,28 @@ package io.github.rreeggkk.jari.common.elements.provider;
 
 import io.github.rreeggkk.jari.common.elements.FissionMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FissionProductsProvider extends IElementProvider.BaseProvider {
+import net.minecraft.item.ItemStack;
 
-	private Product product;
+public class IngotProvider extends IElementProvider.BaseProvider {
 
-	public FissionProductsProvider(Product product) {
+	private ItemStack mat;
+	private double amt;
+	
+	private static ArrayList<ItemStack> mats = new ArrayList<ItemStack>();
+
+	public IngotProvider(ItemStack mat, double amtPer) {
 		super(0, 0, Double.MAX_VALUE, 0);
-		this.product = product;
+		this.mat = mat;
+		mats.add(mat);
+		this.amt = amtPer;
+	}
+	
+	public static ArrayList<ItemStack> getMats() {
+		return mats;
 	}
 
 	@Override
@@ -62,21 +74,14 @@ public class FissionProductsProvider extends IElementProvider.BaseProvider {
 	
 	@Override
 	public double getMolarMass() {
-		switch (product) {
-			case B144:
-				return 144;
-			case K89:
-				return 89;
-			case S94:
-				return 94;
-			case X140:
-				return 140;
-			default:
-				return 0;
-		}
+		return 0;
 	}
-
-	public enum Product {
-		K89, S94, X140, B144;
+	
+	public ItemStack getMat() {
+		return mat;
+	}
+	
+	public double getAmt() {
+		return amt;
 	}
 }

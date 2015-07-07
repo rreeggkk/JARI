@@ -48,7 +48,7 @@ public class TileEntityRTG extends TileEntity implements ISidedInventory, IEnerg
 						double mass = metalMap.get(element);
 						IElementProvider provider = ElementRegistry.getProviderForElement(element);
 						if (provider != null) {
-							double gramsFiss = provider.getSpontaneousFissionChance() * 1/20f * 1000 * mass;
+							double gramsFiss = provider.getSpontaneousFissionChance() * mass;
 							
 							if (gramsFiss > mass) {
 								gramsFiss = mass;

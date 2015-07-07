@@ -15,7 +15,7 @@ public class ConfigHandler {
 	
 	public static double RTG_MAX_WEIGHT;
 	public static double RTGEnergyMultiplier;
-	public static double HALF_LIFE_DIVISOR;
+	public static double SMALL_CUTOFF_POINT = 1E-15;
 
 	// Sections to add to the config
 
@@ -27,7 +27,7 @@ public class ConfigHandler {
 	}
 
 	public static void syncConfig() {
-		HALF_LIFE_DIVISOR = config.get(Configuration.CATEGORY_GENERAL + ".values", "HALF_LIFE_DIVISOR", 1000).getDouble();
+		//HALF_LIFE_DIVISOR = config.get(Configuration.CATEGORY_GENERAL + ".values", "HALF_LIFE_DIVISOR", 1000).getDouble();
 		
 		RTG_MAX_WEIGHT = config.get(Configuration.CATEGORY_GENERAL + ".balancing.rtg", "RTG_Max_Weight", 5000).getDouble();
 		RTGEnergyMultiplier = config.get(Configuration.CATEGORY_GENERAL + ".balancing.rtg", "Energy_Multiplier", 0.2).getDouble();

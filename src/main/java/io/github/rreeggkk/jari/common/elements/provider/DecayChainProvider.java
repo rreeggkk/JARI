@@ -58,15 +58,13 @@ public class DecayChainProvider extends IElementProvider.BaseProvider {
 				return map;
 			}
 			case Bi212:
-				if (JARI.random.nextBoolean()){
-					HashMap<String, Double> map = new HashMap<String, Double>();
-					map.put("Polonium-212", amountFissioned / 1.1);
-					return map;
-				} else {
-					HashMap<String, Double> map = new HashMap<String, Double>();
-					map.put("Thallium-208", amountFissioned / 1.1);
-					return map;
-				}
+			{
+				double pol = JARI.random.nextDouble();
+				HashMap<String, Double> map = new HashMap<String, Double>();
+				map.put("Polonium-212", (amountFissioned * pol) / 1.1);
+				map.put("Thallium-208", (amountFissioned * (1 - pol)) / 1.1);
+				return map;
+			}
 			case Po212:
 			{
 				HashMap<String, Double> map = new HashMap<String, Double>();

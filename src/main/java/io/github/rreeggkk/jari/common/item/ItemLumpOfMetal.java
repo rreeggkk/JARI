@@ -1,10 +1,13 @@
 package io.github.rreeggkk.jari.common.item;
 
 import io.github.rreeggkk.jari.common.elements.ElementRegistry;
+import io.github.rreeggkk.jari.common.util.ConfigHandler;
+import io.github.rreeggkk.jari.common.util.MapUtil;
 import io.github.rreeggkk.jari.common.util.TextHelper;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.creativetab.CreativeTabs;
@@ -34,7 +37,7 @@ public class ItemLumpOfMetal extends ItemBase {
 			information.add("Hold " + TextHelper.YELLOW + "SHIFT"
 					+ TextHelper.LIGHT_GRAY + " to see more data");
 		} else {
-			HashMap<String, Double> metalMap = new HashMap<String, Double>();
+			Map<String, Double> metalMap = new HashMap<String, Double>();
 			double totalWeight = 0;
 
 			NBTTagCompound compound = stack.getTagCompound();
@@ -43,15 +46,22 @@ public class ItemLumpOfMetal extends ItemBase {
 			}
 			NBTTagList metals = compound.getTagList("Metals", NBT.TAG_COMPOUND);
 
-			for (int i = 0; i < metals.tagCount(); i++) {
+			for (int i = metals.tagCount() - 1; i >= 0; i--) {
 				NBTTagCompound metal = metals.getCompoundTagAt(i);
 
 				String name = metal.getString("Name");
 				double amount = metal.getDouble("Quantity");
-				totalWeight += amount;
 
-				metalMap.put(name, amount);
+				if (amount < ConfigHandler.SMALL_CUTOFF_POINT) {
+					metals.removeTag(i);
+				} else {
+					totalWeight += amount;
+
+					metalMap.put(name, amount);
+				}
 			}
+
+			metalMap = MapUtil.sortByValue(metalMap, false);
 
 			for (String metalName : metalMap.keySet()) {
 				information.add(metalName
@@ -97,13 +107,13 @@ public class ItemLumpOfMetal extends ItemBase {
 			compound.setTag("Metals", metals);
 		}
 	}
-	
+
 	public void removeMetalFromLump(ItemStack stack, String metalName, double amount) {
 		if (stack.getItem() == this) {
 			NBTTagCompound cpd = stack.getTagCompound();
-			
+
 			NBTTagList metals = cpd.getTagList("Metals", NBT.TAG_COMPOUND);
-			
+
 			for (int i = 0; i < metals.tagCount(); i++) {
 				NBTTagCompound metal = metals.getCompoundTagAt(i);
 				if (metal.getString("Name").equalsIgnoreCase(metalName)) {
@@ -119,28 +129,32 @@ public class ItemLumpOfMetal extends ItemBase {
 			}
 		}
 	}
-	
+
 	public HashMap<String, Double> getContents(ItemStack stack) {
 		if (stack.getItem() != this) return null;
-		
+
 		HashMap<String, Double> metalMap = new HashMap<String, Double>();
-		
+
 		NBTTagCompound compound = stack.getTagCompound();
 		if (compound == null) {
 			return null;
 		}
-		
+
 		NBTTagList metals = compound.getTagList("Metals", NBT.TAG_COMPOUND);
 
-		for (int i = 0; i < metals.tagCount(); i++) {
+		for (int i = metals.tagCount() - 1; i >= 0; i--) {
 			NBTTagCompound metal = metals.getCompoundTagAt(i);
 
 			String name = metal.getString("Name");
 			double amount = metal.getDouble("Quantity");
 
-			metalMap.put(name, amount);
+			if (amount < ConfigHandler.SMALL_CUTOFF_POINT) {
+				metals.removeTag(i);
+			} else {
+				metalMap.put(name, amount);
+			}
 		}
-		
+
 		return metalMap;
 	}
 
@@ -175,14 +189,14 @@ public class ItemLumpOfMetal extends ItemBase {
 
 	public ItemStack getHalf(ItemStack stack) {
 		if (stack != null && stack.getItem() == this) {
-			
+
 			stack = stack.copy();
-	 		HashMap<String, Double> elements = ItemRegistry.metalLump.getContents(stack);
-	 		for (String str : elements.keySet()) {
-	 	 		ItemRegistry.metalLump.removeMetalFromLump(stack, str, elements.get(str)/2.0);
-	 		}
-	 		
-	 		return stack;
+			HashMap<String, Double> elements = ItemRegistry.metalLump.getContents(stack);
+			for (String str : elements.keySet()) {
+				ItemRegistry.metalLump.removeMetalFromLump(stack, str, elements.get(str)/2.0);
+			}
+
+			return stack;
 		}
 		return null;
 	}

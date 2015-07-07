@@ -50,9 +50,9 @@ public class MetalLumpCommand implements ICommand {
 
 			ItemStack stack = new ItemStack(ItemRegistry.metalLump);
 
-			for (int i = 0; i < astring.length; i += 2) {
-				ItemRegistry.metalLump.addMetalToLump(stack, astring[i],
-						Double.parseDouble(astring[i + 1]));
+			for (int i = 1; i < astring.length; i += 2) {
+				ItemRegistry.metalLump.addMetalToLump(stack, astring[i - 1],
+						Double.parseDouble(astring[i]));
 			}
 
 			if (!player.inventory.addItemStackToInventory(stack)) {

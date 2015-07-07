@@ -8,7 +8,6 @@ import io.github.rreeggkk.jari.common.elements.provider.PlutoniumProvider;
 import io.github.rreeggkk.jari.common.elements.provider.RadiumProvider;
 import io.github.rreeggkk.jari.common.elements.provider.ThoriumProvider;
 import io.github.rreeggkk.jari.common.elements.provider.UraniumProvider;
-import io.github.rreeggkk.jari.common.util.ConfigHandler;
 import io.github.rreeggkk.jari.common.util.NumUtil;
 
 import java.util.HashMap;
@@ -71,7 +70,7 @@ public class ElementRegistry {
 
 		addElement("Uranium-233", new UraniumProvider(halfLifeToFC(159200), 197.9,
 				UraniumProvider.Isotope.U233));
-		addElement("Uranium-234", new UraniumProvider(halfLifeToFC(246000), 197.9, //HL
+		addElement("Uranium-234", new UraniumProvider(halfLifeToFC(246000), 197.9,
 				UraniumProvider.Isotope.U234));
 		addElement("Uranium-235", new UraniumProvider(halfLifeToFC(703800000), 202.5,
 				UraniumProvider.Isotope.U235));
@@ -82,16 +81,10 @@ public class ElementRegistry {
 				PlutoniumProvider.Isotope.P238));
 		addElement("Plutonium-239", new PlutoniumProvider(halfLifeToFC(24100), 207.1,
 				PlutoniumProvider.Isotope.P239));
-		
-		/*
-		 * To Add:
-		 * Po-212
-		 * Th-208
-		 */
 	}
 	
 	public static double halfLifeToFC(double halflifeYr) {
-		halflifeYr /= ConfigHandler.HALF_LIFE_DIVISOR;
+		//halflifeYr /= ConfigHandler.HALF_LIFE_DIVISOR;
 		return 1 - Math.pow(0.5, (1/20.0)/(halflifeYr));
 	}
 	

@@ -1,6 +1,5 @@
 package io.github.rreeggkk.jari.common.crafting.metal;
 
-import io.github.rreeggkk.jari.JARI;
 import io.github.rreeggkk.jari.common.elements.ElementRegistry;
 import io.github.rreeggkk.jari.common.elements.provider.IElementProvider;
 import io.github.rreeggkk.jari.common.elements.provider.IngotProvider;
@@ -41,17 +40,13 @@ public class MetalHalving implements IRecipe {
 	}
 
 	public boolean isConvertToIngot(ItemStack stack) {
-		JARI.logger.error("checking if it is convertable");
 		HashMap<String, Double> map = ItemRegistry.metalLump.getContents(stack);
 		if (map.size() == 1) {
-			JARI.logger.error("map size 1");
 			String element = (String) map.keySet().toArray()[0];
 			IElementProvider provider = ElementRegistry.getProviderForElement(element);
 			if (provider instanceof IngotProvider) {
-				JARI.logger.error("provider ingot");
 				IngotProvider ingot = (IngotProvider) provider;
 				if (map.get(element) >= ingot.getAmt()) {
-					JARI.logger.error("has enough mass");
 					return true;
 				}
 			}

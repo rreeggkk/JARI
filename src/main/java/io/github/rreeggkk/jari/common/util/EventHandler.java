@@ -5,8 +5,6 @@ package io.github.rreeggkk.jari.common.util;
  * Remember that there are two different registries for Events. This one will not work for everything.
  */
 
-import java.util.HashMap;
-
 import io.github.rreeggkk.jari.JARI;
 import io.github.rreeggkk.jari.common.crafting.metal.MetalHalving;
 import io.github.rreeggkk.jari.common.elements.ElementRegistry;
@@ -14,8 +12,14 @@ import io.github.rreeggkk.jari.common.elements.provider.IElementProvider;
 import io.github.rreeggkk.jari.common.elements.provider.IngotProvider;
 import io.github.rreeggkk.jari.common.item.ItemRegistry;
 import io.github.rreeggkk.jari.common.reference.ModInformation;
+
+import java.util.HashMap;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+
+import org.apfloat.Apfloat;
+
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -90,19 +94,19 @@ public class EventHandler {
 			
 			int newStackSize = 1;
 
-			HashMap<String, Double> map = ItemRegistry.metalLump.getContents(newStack);
+			HashMap<String, Apfloat> map = ItemRegistry.metalLump.getContents(newStack);
 			if (map.size() == 1) {
 				String element = (String) map.keySet().toArray()[0];
 				IElementProvider provider = ElementRegistry.getProviderForElement(element);
 				if (provider instanceof IngotProvider) {
 					IngotProvider ingot = (IngotProvider) provider;
-					double amt = (map.get(element) % ingot.getAmt());
+					Apfloat amt = (map.get(element).mod(new Apfloat(ingot.getAmt())));
 					
-					if (amt > 0) {
+					if (amt.doubleValue() > 0) {
 						newStackSize = 2;
 					}
 
-					ItemRegistry.metalLump.removeMetalFromLump(newStack, element, (map.get(element)-amt));
+					ItemRegistry.metalLump.removeMetalFromLump(newStack, element, map.get(element).subtract(amt));
 				}
 			}
 

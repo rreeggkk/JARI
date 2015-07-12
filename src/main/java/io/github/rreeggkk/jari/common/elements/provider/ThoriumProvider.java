@@ -6,11 +6,13 @@ import io.github.rreeggkk.jari.common.elements.FissionMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apfloat.Apfloat;
+
 public class ThoriumProvider extends IElementProvider.BaseProvider {
 
 	private Isotope isotope;
 
-	public ThoriumProvider(double spontFiss, double fissEn, Isotope isotope) {
+	public ThoriumProvider(Apfloat spontFiss, double fissEn, Isotope isotope) {
 		super(spontFiss, fissEn, Double.MAX_VALUE, 0);
 		this.isotope = isotope;
 	}
@@ -36,31 +38,31 @@ public class ThoriumProvider extends IElementProvider.BaseProvider {
 	}
 
 	@Override
-	public Map<String, Double> doFission(FissionMode fiss,
-			double amountFissioned) {
+	public Map<String, Apfloat> doFission(FissionMode fiss,
+			Apfloat amountFissioned) {
 		switch (fiss) {
 			case ABSORB:
 				if (isotope == Isotope.T232) {
-					HashMap<String, Double> map = new HashMap<String, Double>();
+					HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
 					map.put("Thorium-233", amountFissioned);
 					return map;
 				}
 				break;
 			case FISSION:
 				if (isotope == Isotope.T233) {
-					HashMap<String, Double> map = new HashMap<String, Double>();
+					HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
 					map.put("Uranium-233", amountFissioned);
 					return map;
 				} else {
 					if (JARI.random.nextBoolean()) {
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Krypton-89", amountFissioned / 3.1);
-						map.put("Barium-144", amountFissioned / 3.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Krypton-89", amountFissioned.divide(new Apfloat(3.1)));
+						map.put("Barium-144", amountFissioned.divide(new Apfloat(3.1)));
 						return map;
 					} else {
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Strontium-94", amountFissioned / 3.1);
-						map.put("Xenon-140", amountFissioned / 3.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Strontium-94", amountFissioned.divide(new Apfloat(3.1)));
+						map.put("Xenon-140", amountFissioned.divide(new Apfloat(3.1)));
 						return map;
 					}
 				}
@@ -68,46 +70,46 @@ public class ThoriumProvider extends IElementProvider.BaseProvider {
 				switch (isotope) {
 					case T229:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Radium-228", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Radium-228", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 					}
 					case T230:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Radium-228", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Radium-228", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 
 					}
 					case T231:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Radium-228", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Radium-228", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 
 					}
 					case T232:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Radium-228", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Radium-228", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 					}
 					case T233:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Uranium-233", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Uranium-233", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 					}
 					case T234:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Uranium-234", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Uranium-234", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 					}
 				}
 				break;
 		}
-		return new HashMap<String, Double>();
+		return new HashMap<String, Apfloat>();
 	}
 
 	@Override
@@ -138,6 +140,11 @@ public class ThoriumProvider extends IElementProvider.BaseProvider {
 			default:
 				return 0;
 		}
+	}
+
+	@Override
+	public boolean isSameElementAs(IElementProvider other) {
+		return other instanceof ThoriumProvider;
 	}
 
 	public enum Isotope {

@@ -4,6 +4,8 @@ import io.github.rreeggkk.jari.common.elements.FissionMode;
 
 import java.util.Map;
 
+import org.apfloat.Apfloat;
+
 public interface IElementProvider {
 	public double getNeutronHitChance(boolean isThermalNeutron);
 
@@ -18,7 +20,7 @@ public interface IElementProvider {
 	 * 
 	 * @return the amount of grams per kilogram that will fission per second (Defines how much matter fissions)
 	 */
-	public double getSpontaneousFissionChance();
+	public Apfloat getSpontaneousFissionChance();
 
 	/**
 	 * Get the amount of RF generated per gram of the substance fissioned
@@ -29,8 +31,8 @@ public interface IElementProvider {
 
 	public double getOutputNeutrons(boolean isThermalNeutron);
 
-	public Map<String, Double> doFission(FissionMode fiss,
-			double amountFissioned);
+	public Map<String, Apfloat> doFission(FissionMode fiss,
+			Apfloat gramsFiss);
 
 	public double getFusionEnergy();
 
@@ -41,16 +43,19 @@ public interface IElementProvider {
 	public Map<String, Double> getFusionOutput();
 	
 	public double getMolarMass();
+	
+	public boolean isSameElementAs(IElementProvider other);
 
 	public abstract class BaseProvider implements IElementProvider {
 
-		protected double spontFiss, fissEn;
+		protected double fissEn;
+		protected Apfloat spontFiss;
 		protected double fusEnReq, fusEnOut;
 
 		public BaseProvider() {
 		}
 
-		public BaseProvider(double spontFiss, double fissEn, double fusEnReq,
+		public BaseProvider(Apfloat spontFiss, double fissEn, double fusEnReq,
 				double fusEnOut) {
 			this.spontFiss = spontFiss;
 			this.fissEn = fissEn;
@@ -59,7 +64,7 @@ public interface IElementProvider {
 		}
 
 		@Override
-		public double getSpontaneousFissionChance() {
+		public Apfloat getSpontaneousFissionChance() {
 			return spontFiss;
 		}
 

@@ -56,6 +56,7 @@ dependencies {
 	compile name: 'ThermalExpansion', version: "${texpansion_version}", ext: 'jar'
 	compile name: 'ThermalFoundation', version: "${tfoundation_version}", ext: 'jar'
 	compile name: 'ThermalDynamics', version: "${tdynamics_version}", ext: 'jar'
+	compile group: 'org.apfloat', name: 'apfloat', version: '1.8.2'
 }
 
 processResources {

@@ -6,11 +6,13 @@ import io.github.rreeggkk.jari.common.elements.FissionMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apfloat.Apfloat;
+
 public class UraniumProvider extends IElementProvider.BaseProvider {
 
 	private Isotope isotope;
 
-	public UraniumProvider(double spontFiss, double fissEn, Isotope isotope) {
+	public UraniumProvider(Apfloat spontFiss, double fissEn, Isotope isotope) {
 		super(spontFiss, fissEn, Double.MAX_VALUE, 0);
 		this.isotope = isotope;
 	}
@@ -47,22 +49,22 @@ public class UraniumProvider extends IElementProvider.BaseProvider {
 	}
 
 	@Override
-	public Map<String, Double> doFission(FissionMode fiss,
-			double amountFissioned) {
+	public Map<String, Apfloat> doFission(FissionMode fiss,
+			Apfloat amountFissioned) {
 		switch (fiss) {
 			case ABSORB:
 				switch (isotope) {
 					case U233:
 					case U234:
-						HashMap<String, Double> map = new HashMap<String, Double>();
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
 						map.put("Uranium-235", amountFissioned);
 						return map;
 					case U235:
-						HashMap<String, Double> map1 = new HashMap<String, Double>();
+						HashMap<String, Apfloat> map1 = new HashMap<String, Apfloat>();
 						map1.put("Uranium-238", amountFissioned);
 						return map1;
 					case U238:
-						HashMap<String, Double> map11 = new HashMap<String, Double>();
+						HashMap<String, Apfloat> map11 = new HashMap<String, Apfloat>();
 						if (JARI.random.nextBoolean()) {
 							map11.put("Plutonium-238", amountFissioned);
 						} else {
@@ -73,47 +75,47 @@ public class UraniumProvider extends IElementProvider.BaseProvider {
 				break;
 			case FISSION:
 				if (JARI.random.nextBoolean()) {
-					HashMap<String, Double> map = new HashMap<String, Double>();
-					map.put("Krypton-89", amountFissioned / 3.1);
-					map.put("Barium-144", amountFissioned / 3.1);
+					HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+					map.put("Krypton-89", amountFissioned.divide(new Apfloat(3.1)));
+					map.put("Barium-144", amountFissioned.divide(new Apfloat(3.1)));
 					return map;
 				} else {
-					HashMap<String, Double> map = new HashMap<String, Double>();
-					map.put("Strontium-94", amountFissioned / 3.1);
-					map.put("Xenon-140", amountFissioned / 3.1);
+					HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+					map.put("Strontium-94", amountFissioned.divide(new Apfloat(3.1)));
+					map.put("Xenon-140", amountFissioned.divide(new Apfloat(3.1)));
 					return map;
 				}
 			case DECAY:
 				switch (isotope) {
 					case U233:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Thorium-229", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Thorium-229", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 					}
 					case U234:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Thorium-230", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Thorium-230", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 					}
 					case U235:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Thorium-231", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Thorium-231", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 					}
 					case U238:
 					{
-						HashMap<String, Double> map = new HashMap<String, Double>();
-						map.put("Thorium-234", amountFissioned / 1.1);
+						HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+						map.put("Thorium-234", amountFissioned.divide(new Apfloat(1.1)));
 						return map;
 					}
 				}
 				break;
 				
 		}
-		return new HashMap<String, Double>();
+		return new HashMap<String, Apfloat>();
 	}
 
 	@Override
@@ -140,6 +142,11 @@ public class UraniumProvider extends IElementProvider.BaseProvider {
 			default:
 				return 0;
 		}
+	}
+
+	@Override
+	public boolean isSameElementAs(IElementProvider other) {
+		return other instanceof UraniumProvider;
 	}
 
 	public enum Isotope {

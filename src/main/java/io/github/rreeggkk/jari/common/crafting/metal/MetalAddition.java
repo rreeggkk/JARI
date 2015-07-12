@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
+import org.apfloat.Apfloat;
+
 public class MetalAddition implements IRecipe {
  	@Override
 	public boolean matches(InventoryCrafting crafting, World world) {
@@ -48,7 +50,7 @@ public class MetalAddition implements IRecipe {
  		
  		ItemStack stack = new ItemStack(ItemRegistry.metalLump);
  		for (ItemStack metalStack : metalStacks) {
- 			HashMap<String, Double> cont = ItemRegistry.metalLump.getContents(metalStack);
+ 			HashMap<String, Apfloat> cont = ItemRegistry.metalLump.getContents(metalStack);
  			for (String str : cont.keySet()) {
  				ItemRegistry.metalLump.addMetalToLump(stack, str, cont.get(str));
  			}

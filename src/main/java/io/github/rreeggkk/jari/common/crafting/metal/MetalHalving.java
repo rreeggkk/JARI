@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
+import org.apfloat.Apfloat;
+
 public class MetalHalving implements IRecipe {
 
 	public static MetalHalving instance;
@@ -40,13 +42,13 @@ public class MetalHalving implements IRecipe {
 	}
 
 	public boolean isConvertToIngot(ItemStack stack) {
-		HashMap<String, Double> map = ItemRegistry.metalLump.getContents(stack);
+		HashMap<String, Apfloat> map = ItemRegistry.metalLump.getContents(stack);
 		if (map.size() == 1) {
 			String element = (String) map.keySet().toArray()[0];
 			IElementProvider provider = ElementRegistry.getProviderForElement(element);
 			if (provider instanceof IngotProvider) {
 				IngotProvider ingot = (IngotProvider) provider;
-				if (map.get(element) >= ingot.getAmt()) {
+				if (map.get(element).doubleValue() >= ingot.getAmt()) {
 					return true;
 				}
 			}
@@ -71,17 +73,17 @@ public class MetalHalving implements IRecipe {
 		}
 
 		if (isConvertToIngot(stack)) {
-			HashMap<String, Double> map = ItemRegistry.metalLump.getContents(stack);
+			HashMap<String, Apfloat> map = ItemRegistry.metalLump.getContents(stack);
 			if (map.size() == 1) {
 				String element = (String) map.keySet().toArray()[0];
 				IElementProvider provider = ElementRegistry.getProviderForElement(element);
 				if (provider instanceof IngotProvider) {
 					IngotProvider ingot = (IngotProvider) provider;
 					ItemStack nStack = ingot.getMat().copy();
-					int amt = (int) (map.get(element) / ingot.getAmt());
+					int amt = (int) (map.get(element).doubleValue() / ingot.getAmt());
 					nStack.stackSize = amt;
 					
-					ItemRegistry.metalLump.removeMetalFromLump(nStack, element, amt * ingot.getAmt());
+					ItemRegistry.metalLump.removeMetalFromLump(nStack, element, new Apfloat(amt * ingot.getAmt()));
 					
 					return nStack;
 				}

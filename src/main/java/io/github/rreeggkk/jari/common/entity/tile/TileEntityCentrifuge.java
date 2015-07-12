@@ -1,8 +1,14 @@
 package io.github.rreeggkk.jari.common.entity.tile;
 
-import io.github.rreeggkk.jari.common.crafting.hydraulic.HydraulicSeparatorCraftingHandler;
-import io.github.rreeggkk.jari.common.crafting.hydraulic.IHydraulicRecipe;
+import io.github.rreeggkk.jari.common.elements.ElementRegistry;
+import io.github.rreeggkk.jari.common.elements.provider.IElementProvider;
 import io.github.rreeggkk.jari.common.enums.RedstonePowerMode;
+import io.github.rreeggkk.jari.common.item.ItemRegistry;
+import io.github.rreeggkk.jari.common.util.ConfigHandler;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
@@ -10,33 +16,28 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
+
+import org.apfloat.Apfloat;
+
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.TileEnergyHandler;
 
-public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
-		ISidedInventory, IFluidHandler, IRedstoneControllable,
-		IEnergyAccessable{
-	public static final int maxWater = 16 * 1000;
+public class TileEntityCentrifuge extends TileEnergyHandler implements
+ISidedInventory, IRedstoneControllable,
+IEnergyAccessable, ITextControllable{
 
-	private FluidTank tank;
 	private ItemStack[] inventory;
 	private int currentProcessEnergy, processStartEnergy;
 	private Item lastItemInMachine;
 	private int lastItemMetaInMachine;
 	private RedstonePowerMode powerMode;
+	private int elementIndex;
+	private double percentPurity;
 
-	public TileEntityHydraulicSeparator() {
+	public TileEntityCentrifuge() {
 		super();
-		inventory = new ItemStack[2];
-		storage = new EnergyStorage(100000);
-		tank = new FluidTank(maxWater);
+		inventory = new ItemStack[3];
+		storage = new EnergyStorage(10000);
 		powerMode = RedstonePowerMode.REQUIRED_OFF;
 	}
 
@@ -109,11 +110,11 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 	}
 
 	private int getMinEnergyPerTick() {
-		return 80;
+		return 5;
 	}
 
 	private int getMaxEnergyPerTick() {
-		return 80 * 4;
+		return 5 * 4;
 	}
 
 	private int getCurrentEnergyPerTick() {
@@ -148,7 +149,8 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		processStartEnergy = compound.getInteger("Start");
 		powerMode = RedstonePowerMode.getFromIndex(compound
 				.getInteger("PowerMode"));
-		tank = tank.readFromNBT(compound.getCompoundTag("Tank"));
+		elementIndex = ElementRegistry.getIndex(compound.getString("Element"));
+		percentPurity = compound.getDouble("Purity");
 	}
 
 	@Override
@@ -169,28 +171,58 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		compound.setInteger("Progress", currentProcessEnergy);
 		compound.setInteger("Start", processStartEnergy);
 		compound.setInteger("PowerMode", powerMode.getIndex());
-		compound.setTag("Tank", tank.writeToNBT(new NBTTagCompound()));
+		compound.setString("Element", ElementRegistry.getFromIndex(elementIndex));
+		compound.setDouble("Purity", percentPurity);
 	}
 
 	public int processItem() {
 		if (canProcess()) {
-			IHydraulicRecipe r = HydraulicSeparatorCraftingHandler.instance
-					.getRecipeForInput(inventory[0]);
-
-			ItemStack itemstack = r.getResult(inventory[0]);
-
-			if (itemstack != null) {
-				if (inventory[1] == null) {
-					inventory[1] = itemstack.copy();
-				} else if (inventory[1].getItem() == itemstack.getItem()) {
-					inventory[1].stackSize += itemstack.stackSize; // Forge
-																	// BugFix:
-					// Results
-					// may
-					// have
-					// multiple
-					// items
+			if (inventory[0].getItem() == ItemRegistry.metalLump) {
+				HashMap<String, Apfloat> cont = ItemRegistry.metalLump.getContents(inventory[0]);
+				if (cont.size() <= 1) {
+					return 0;
 				}
+
+				double totalMassOld = ItemRegistry.metalLump.getTotalMass(inventory[0]).doubleValue();
+
+				ItemStack o1 = new ItemStack(ItemRegistry.metalLump);
+				ItemStack o2 = new ItemStack(ItemRegistry.metalLump);
+				
+				String element = ElementRegistry.getFromIndex(elementIndex);
+
+				double planAmt = cont.get(element).doubleValue();
+				double total = planAmt/percentPurity;
+
+				if (total <= totalMassOld) {
+					double totalMassNew = totalMassOld - planAmt;
+					double others = total-planAmt;
+
+					for (String s : cont.keySet()) {
+						if (s.equals(element)) {
+							ItemRegistry.metalLump.addMetalToLump(o1, s, cont.get(s));
+						} else {
+							Apfloat o1Mass = cont.get(s).divide(new Apfloat(totalMassNew)).multiply(new Apfloat(others));
+							ItemRegistry.metalLump.addMetalToLump(o1, s, o1Mass);
+							ItemRegistry.metalLump.addMetalToLump(o2, s, cont.get(s).subtract(o1Mass));
+						}
+					}
+				} else {
+					Apfloat amtTransfer = new Apfloat((percentPurity*totalMassOld - planAmt)/(percentPurity - 1));
+					for (String s : cont.keySet()) {
+						if (!s.equals(element)) {
+							ItemRegistry.metalLump.addMetalToLump(o1, s, cont.get(s));
+						} else {
+							//If the right element
+							ItemRegistry.metalLump.addMetalToLump(o1, s, cont.get(s).subtract(amtTransfer));
+							ItemRegistry.metalLump.addMetalToLump(o2, s, amtTransfer);
+						}
+					}
+				}
+
+				inventory[1] = o1;
+				inventory[2] = o2;
+				
+				int pe = getProcessEnergy();
 
 				--inventory[0].stackSize;
 
@@ -198,60 +230,73 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 					inventory[0] = null;
 				}
 
-				tank.drain(r.getRequiredWater(), true);
-
-				return r.getRequiredEnergy();
+				return pe;
 			}
 		}
 		return 0;
 	}
 
 	private int getProcessEnergy() {
-		IHydraulicRecipe r = HydraulicSeparatorCraftingHandler.instance
-				.getRecipeForInput(inventory[0]);
+		HashMap<String, Apfloat> cont = ItemRegistry.metalLump.getContents(inventory[0]);
 
-		if (r == null) {
-			return 0;
+		Apfloat mass = new Apfloat(0);
+		Apfloat totalMass = new Apfloat(0);
+
+		IElementProvider provider = ElementRegistry.getProviderForElement(ElementRegistry.getFromIndex(elementIndex));
+
+		for (String s : cont.keySet()) {
+			IElementProvider prov = ElementRegistry.getProviderForElement(s);
+			if (provider.isSameElementAs(prov)) {
+				mass = mass.add(cont.get(s));
+			}
+			totalMass = totalMass.add(cont.get(s));
 		}
 
-		return r.getRequiredEnergy();
+		double A = mass.doubleValue()/totalMass.doubleValue();
+		double B = percentPurity;
+		double D = A-B;
+		double Q = Math.abs(D);
+
+		//double numer = ConfigHandler.CENTRIFUGE_POWER_USE_MULTIPLIER * 100 * Math.pow(Q, 1/6f) * Math.log1p(totalMass);
+
+		//double denom = Math.log(Math.log(1.7 - Q + 1) + 1);
+
+		return (int) (ConfigHandler.CENTRIFUGE_POWER_USE_MULTIPLIER * 500 * Math.log(100 * Q + 1) + totalMass.doubleValue()/30);//(int) (numer/denom);
 	}
 
 	private boolean canProcess() {
 		if (inventory[0] == null) {
 			return false;
 		} else {
-			IHydraulicRecipe r = HydraulicSeparatorCraftingHandler.instance
-					.getRecipeForInput(inventory[0]);
-
-			if (r == null) {
-				return false;
-			}
-
-			if (tank.getFluidAmount() < r.getRequiredWater()) {
-				return false;
-			}
-
-			ItemStack itemstack = r.getResult(inventory[0]);
-			if (itemstack == null) {
-				return false;
-			}
-			if (inventory[1] == null) {
-				return true;
-			}
-			if (!inventory[1].isItemEqual(itemstack)) {
-				return false;
-			}
-			int result = inventory[1].stackSize + itemstack.stackSize;
-			return result <= getInventoryStackLimit()
-					&& result <= inventory[1].getMaxStackSize(); // Forge
-			// BugFix:
-			// Make it
-			// respect
-			// stack
-			// sizes
-			// properly.
+			return canProcessItemstack(inventory[0]);
 		}
+	}
+
+	private boolean canProcessItemstack(ItemStack stack) {
+		if (stack == null) {
+			return false;
+		}
+
+		HashMap<String, Apfloat> cont = ItemRegistry.metalLump.getContents(stack);
+		if (cont.size() <= 1 || !cont.containsKey(ElementRegistry.getFromIndex(elementIndex))) {
+			return false;
+		}
+
+		ArrayList<String> elements = new ArrayList<String>();
+		for (String s : cont.keySet()) {
+			IElementProvider provider = ElementRegistry.getProviderForElement(s);
+			boolean notIn = true;
+			for (String ele : elements) {
+				if (provider.isSameElementAs(ElementRegistry.getProviderForElement(ele))) {
+					notIn = false;
+				}
+			}
+			if (notIn) {
+				elements.add(s);
+			}
+		}
+
+		return elements.size() == 1;
 	}
 
 	@Override
@@ -309,7 +354,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 
 	@Override
 	public String getInventoryName() {
-		return "tileEntity.rreeHydraulicSeparator.name";
+		return "tileEntity.rreeCentrifuge.name";
 	}
 
 	@Override
@@ -339,7 +384,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		if (slot == 0) {
+		if (slot == 0 && stack.getItem() == ItemRegistry.metalLump && canProcessItemstack(stack)) {
 			return true;
 		}
 		return false;
@@ -347,7 +392,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		return new int[] {0,1};
+		return new int[] {0,1,2};
 	}
 
 	@Override
@@ -357,7 +402,7 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 
 	@Override
 	public boolean canExtractItem(int slot, ItemStack item, int side) {
-		return slot == 1;
+		return slot == 1 || slot == 2;
 	}
 
 	public boolean isOn(World world, int x, int y, int z) {
@@ -392,28 +437,6 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		return (int) ((float) getCurrentEnergyPerTick() * maximum / getMaxEnergyPerTick());
 	}
 
-	public int getWaterScaled(int maximum) {
-		return (int) ((float) tank.getFluidAmount() * maximum / maxWater);
-	}
-
-	public int getWaterCount() {
-		return tank.getFluidAmount();
-	}
-
-	public void setWaterCount(int i) {
-		tank.fill(
-				new FluidStack(FluidRegistry.WATER, i - tank.getFluidAmount()),
-				true);
-	}
-
-	public FluidTank getTank() {
-		return tank;
-	}
-
-	public void setTank(FluidTank tank) {
-		this.tank = tank;
-	}
-
 	@Override
 	public int getEnergy() {
 		return storage.getEnergyStored();
@@ -444,37 +467,6 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		this.processStartEnergy = processStartEnergy;
 	}
 
-	@Override
-	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
-		return tank.fill(resource, doFill);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, FluidStack resource,
-			boolean doDrain) {
-		return tank.drain(resource.amount, doDrain);
-	}
-
-	@Override
-	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
-		return tank.drain(maxDrain, doDrain);
-	}
-
-	@Override
-	public boolean canFill(ForgeDirection from, Fluid fluid) {
-		return fluid == FluidRegistry.WATER;
-	}
-
-	@Override
-	public boolean canDrain(ForgeDirection from, Fluid fluid) {
-		return false;
-	}
-
-	@Override
-	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-		return new FluidTankInfo[] { tank.getInfo() };
-	}
-
 	public int getComparatorOutput() {
 		return getEnergyScaled(15);
 	}
@@ -489,4 +481,39 @@ public class TileEntityHydraulicSeparator extends TileEnergyHandler implements
 		this.powerMode = powerMode;
 	}
 
+	@Override
+	public String getString(int index) {
+		if (index == 1) {
+			return ElementRegistry.getFromIndex(elementIndex);
+		} else if (index == 2) {
+			return getPercent() + "%";
+		}
+		return "";
+	}
+
+	@Override
+	public void setString(int index, String str) {
+		if (index == 1) {
+			//element = ELlemenstr;
+		} else if (index == 2) {
+			percentPurity = Integer.parseInt(str);
+		}
+	}
+
+	public int getPercent() {
+		return (int) (percentPurity * 100);
+	}
+	
+	public void setPercent(int percentPurity) {
+		percentPurity = Math.max(0, Math.min(100, percentPurity));
+		this.percentPurity = percentPurity/100.0;
+	}
+	
+	public void setElementIndex(int index) {
+		elementIndex = index;
+	}
+
+	public int getElementIndex() {
+		return elementIndex;
+	}
 }

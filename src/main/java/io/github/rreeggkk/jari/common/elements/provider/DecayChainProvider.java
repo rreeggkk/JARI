@@ -6,11 +6,13 @@ import io.github.rreeggkk.jari.common.elements.FissionMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apfloat.Apfloat;
+
 public class DecayChainProvider extends IElementProvider.BaseProvider {
 
 	private Isotope isotope;
 
-	public DecayChainProvider(double spontFiss, double fissEn, Isotope isotope) {
+	public DecayChainProvider(Apfloat spontFiss, double fissEn, Isotope isotope) {
 		super(spontFiss, fissEn, Double.MAX_VALUE, 0);
 		this.isotope = isotope;
 	}
@@ -36,49 +38,49 @@ public class DecayChainProvider extends IElementProvider.BaseProvider {
 	}
 
 	@Override
-	public Map<String, Double> doFission(FissionMode fiss,
-			double amountFissioned) {
+	public Map<String, Apfloat> doFission(FissionMode fiss,
+			Apfloat amountFissioned) {
 		switch (isotope) {
 			case Rn220:
 			{
-				HashMap<String, Double> map = new HashMap<String, Double>();
-				map.put("Polonium-216", amountFissioned / 1.1);
+				HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+				map.put("Polonium-216", amountFissioned.divide(new Apfloat(1.1)));
 				return map;
 			}
 			case Po216:
 			{
-				HashMap<String, Double> map = new HashMap<String, Double>();
-				map.put("Lead-212", amountFissioned / 1.1);
+				HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+				map.put("Lead-212", amountFissioned.divide(new Apfloat(1.1)));
 				return map;
 			}
 			case Pb212:
 			{
-				HashMap<String, Double> map = new HashMap<String, Double>();
-				map.put("Bismuth-212", amountFissioned / 1.1);
+				HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+				map.put("Bismuth-212", amountFissioned.divide(new Apfloat(1.1)));
 				return map;
 			}
 			case Bi212:
 			{
 				double pol = JARI.random.nextDouble();
-				HashMap<String, Double> map = new HashMap<String, Double>();
-				map.put("Polonium-212", (amountFissioned * pol) / 1.1);
-				map.put("Thallium-208", (amountFissioned * (1 - pol)) / 1.1);
+				HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+				map.put("Polonium-212", amountFissioned.multiply(new Apfloat(pol)).divide(new Apfloat(1.1)));
+				map.put("Thallium-208", amountFissioned.multiply(new Apfloat(1).subtract(new Apfloat(pol))).divide(new Apfloat(1.1)));
 				return map;
 			}
 			case Po212:
 			{
-				HashMap<String, Double> map = new HashMap<String, Double>();
-				map.put("Lead-208", amountFissioned / 1.1);
+				HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+				map.put("Lead-208", amountFissioned.divide(new Apfloat(1.1)));
 				return map;
 			}
 			case Tl208:
 			{
-				HashMap<String, Double> map = new HashMap<String, Double>();
-				map.put("Lead-208", amountFissioned / 1.1);
+				HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+				map.put("Lead-208", amountFissioned.divide(new Apfloat(1.1)));
 				return map;
 			}
 		}
-		return new HashMap<String, Double>();
+		return new HashMap<String, Apfloat>();
 	}
 
 	@Override
@@ -106,6 +108,22 @@ public class DecayChainProvider extends IElementProvider.BaseProvider {
 				return 208;
 		}
 		return 0;
+	}
+
+	@Override
+	public boolean isSameElementAs(IElementProvider other) {
+		if (!(other instanceof DecayChainProvider)) {
+			return false;
+		}
+		DecayChainProvider dcp = (DecayChainProvider)other;
+
+		switch (dcp.isotope) {
+			case Po212:
+			case Po216:
+				return this.isotope == Isotope.Po212 || this.isotope == Isotope.Po216;
+			default:
+				return false;
+		}
 	}
 
 	public enum Isotope {

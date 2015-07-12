@@ -5,12 +5,14 @@ import io.github.rreeggkk.jari.common.elements.FissionMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apfloat.Apfloat;
+
 public class FissionProductsProvider extends IElementProvider.BaseProvider {
 
 	private Product product;
 
 	public FissionProductsProvider(Product product) {
-		super(0, 0, Double.MAX_VALUE, 0);
+		super(new Apfloat(0f), 0, Double.MAX_VALUE, 0);
 		this.product = product;
 	}
 
@@ -35,9 +37,9 @@ public class FissionProductsProvider extends IElementProvider.BaseProvider {
 	}
 
 	@Override
-	public Map<String, Double> doFission(FissionMode fiss,
-			double amountFissioned) {
-		return new HashMap<String, Double>();
+	public Map<String, Apfloat> doFission(FissionMode fiss,
+			Apfloat amountFissioned) {
+		return new HashMap<String, Apfloat>();
 	}
 
 	@Override
@@ -48,11 +50,6 @@ public class FissionProductsProvider extends IElementProvider.BaseProvider {
 	@Override
 	public Map<String, Double> getFusionOutput() {
 		return null;
-	}
-	
-	@Override
-	public double getSpontaneousFissionChance() {
-		return super.getSpontaneousFissionChance();
 	}
 	
 	@Override
@@ -74,6 +71,11 @@ public class FissionProductsProvider extends IElementProvider.BaseProvider {
 			default:
 				return 0;
 		}
+	}
+
+	@Override
+	public boolean isSameElementAs(IElementProvider other) {
+		return false;
 	}
 
 	public enum Product {

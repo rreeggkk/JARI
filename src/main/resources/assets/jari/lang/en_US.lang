@@ -7,10 +7,14 @@ gui.jari.config.title=JARI Configuration
 #BLOCKS
 tile.blockRTG.name=Radioisotope Thermoelectric Generator (RTG)
 tile.blockHydraulicSeparator.name=Hydraulic Separator
+tile.blockChemicalSeparator.name=Chemical Separator
+tile.blockCentrifuge.name=Centrifuge
 tile.jari.blockRadioactiveStone.name=Radioactive Stone
 
 #TILE ENTITY
 tileEntity.rreeHydraulicSeparator.name=Hydraulic Separator
+tileEntity.rreeChemicalSeparator.name=Chemical Separator
+tileEntity.rreeCentrifuge.name=Centrifuge
 tileEntity.rreeRTG.name=RTG
 
 #GUI ELEMENTS

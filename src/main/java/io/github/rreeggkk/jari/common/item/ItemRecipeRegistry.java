@@ -1,5 +1,7 @@
 package io.github.rreeggkk.jari.common.item;
 
+import net.minecraftforge.oredict.RecipeSorter;
+import net.minecraftforge.oredict.RecipeSorter.Category;
 import io.github.rreeggkk.jari.common.crafting.metal.MetalAddition;
 import io.github.rreeggkk.jari.common.crafting.metal.MetalHalving;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -14,7 +16,9 @@ public class ItemRecipeRegistry {
 	}
 
 	private static void registerShaplessRecipes() {
+		RecipeSorter.register("jari:metaladdition", MetalAddition.class, Category.SHAPED, "after:minecraft:shaped");
 		GameRegistry.addRecipe(new MetalAddition());
+		RecipeSorter.register("jari:metalhalving", MetalHalving.class, Category.SHAPED, "after:minecraft:shaped");
 		GameRegistry.addRecipe(new MetalHalving());
 	}
 

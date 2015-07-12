@@ -5,11 +5,13 @@ import io.github.rreeggkk.jari.common.elements.FissionMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apfloat.Apfloat;
+
 public class RadiumProvider extends IElementProvider.BaseProvider {
 
 	private Isotope isotope;
 
-	public RadiumProvider(double spontFiss, double fissEn, Isotope isotope) {
+	public RadiumProvider(Apfloat spontFiss, double fissEn, Isotope isotope) {
 		super(spontFiss, fissEn, Double.MAX_VALUE, 0);
 		this.isotope = isotope;
 	}
@@ -35,24 +37,24 @@ public class RadiumProvider extends IElementProvider.BaseProvider {
 	}
 
 	@Override
-	public Map<String, Double> doFission(FissionMode fiss,
-			double amountFissioned) {
+	public Map<String, Apfloat> doFission(FissionMode fiss,
+			Apfloat amountFissioned) {
 		switch (isotope) {
 			case R224:
 			{
-				HashMap<String, Double> map = new HashMap<String, Double>();
-				map.put("Radon-220", amountFissioned / 1.1);
+				HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+				map.put("Radon-220", amountFissioned.divide(new Apfloat(1.1)));
 				return map;
 			}
 			case R228:
 			{
-				HashMap<String, Double> map = new HashMap<String, Double>();
-				map.put("Radium-224", amountFissioned / 1.1);
+				HashMap<String, Apfloat> map = new HashMap<String, Apfloat>();
+				map.put("Radium-224", amountFissioned.divide(new Apfloat(1.1)));
 				return map;
 
 			}
 		}
-		return new HashMap<String, Double>();
+		return new HashMap<String, Apfloat>();
 	}
 
 	@Override
@@ -75,6 +77,11 @@ public class RadiumProvider extends IElementProvider.BaseProvider {
 			default:
 				return 0;
 		}
+	}
+
+	@Override
+	public boolean isSameElementAs(IElementProvider other) {
+		return other instanceof RadiumProvider;
 	}
 
 	public enum Isotope {

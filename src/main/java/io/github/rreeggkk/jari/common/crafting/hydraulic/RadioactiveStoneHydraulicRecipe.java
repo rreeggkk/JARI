@@ -9,15 +9,17 @@ import java.util.HashMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import org.apfloat.Apfloat;
+
 public class RadioactiveStoneHydraulicRecipe implements IHydraulicRecipe {
 
 	private static HashMap<String, Double> outputChance = new HashMap<String, Double>();
 
 	static {
-		addOutputElement("Thorium-232", 1.00);
+		addOutputElement("Thorium-232", 0.90);
 
-		addOutputElement("Uranium-235", 0.15);
-		addOutputElement("Uranium-238", 0.90);
+		addOutputElement("Uranium-235", 0.07);
+		addOutputElement("Uranium-238", 0.80);
 	}
 
 	public static void addOutputElement(String element, double chance) {
@@ -52,14 +54,14 @@ public class RadioactiveStoneHydraulicRecipe implements IHydraulicRecipe {
 	public ItemStack getResult(ItemStack input) {
 		HashMap<String, Double> elements = new HashMap<String, Double>();
 
-		for (int i = 0; i < 3 + JARI.random.nextInt(4); i++) {
+		for (int i = 0; i < 4 + JARI.random.nextInt(6); i++) {
 			for (String s : outputChance.keySet()) {
 				if (outputChance.get(s) > JARI.random.nextDouble()) {
 					if (!elements.containsKey(s)) {
 						elements.put(s, 0.0);
 					}
 					elements.put(s, elements.get(s) + JARI.random.nextDouble()
-							* 3 + 1);
+							* 4 + 1);
 				}
 			}
 		}
@@ -67,7 +69,7 @@ public class RadioactiveStoneHydraulicRecipe implements IHydraulicRecipe {
 		ItemStack stack = new ItemStack(ItemRegistry.metalLump);
 
 		for (String s : elements.keySet()) {
-			ItemRegistry.metalLump.addMetalToLump(stack, s, elements.get(s));
+			ItemRegistry.metalLump.addMetalToLump(stack, s, new Apfloat(elements.get(s)));
 		}
 
 		return stack;

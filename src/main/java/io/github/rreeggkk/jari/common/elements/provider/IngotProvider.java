@@ -8,6 +8,8 @@ import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 
+import org.apfloat.Apfloat;
+
 public class IngotProvider extends IElementProvider.BaseProvider {
 
 	private ItemStack mat;
@@ -16,7 +18,7 @@ public class IngotProvider extends IElementProvider.BaseProvider {
 	private static ArrayList<ItemStack> mats = new ArrayList<ItemStack>();
 
 	public IngotProvider(ItemStack mat, double amtPer) {
-		super(0, 0, Double.MAX_VALUE, 0);
+		super(new Apfloat(0f), 0, Double.MAX_VALUE, 0);
 		this.mat = mat;
 		mats.add(mat);
 		this.amt = amtPer;
@@ -47,9 +49,9 @@ public class IngotProvider extends IElementProvider.BaseProvider {
 	}
 
 	@Override
-	public Map<String, Double> doFission(FissionMode fiss,
-			double amountFissioned) {
-		return new HashMap<String, Double>();
+	public Map<String, Apfloat> doFission(FissionMode fiss,
+			Apfloat amountFissioned) {
+		return new HashMap<String, Apfloat>();
 	}
 
 	@Override
@@ -60,11 +62,6 @@ public class IngotProvider extends IElementProvider.BaseProvider {
 	@Override
 	public Map<String, Double> getFusionOutput() {
 		return null;
-	}
-	
-	@Override
-	public double getSpontaneousFissionChance() {
-		return super.getSpontaneousFissionChance();
 	}
 	
 	@Override
@@ -83,5 +80,10 @@ public class IngotProvider extends IElementProvider.BaseProvider {
 	
 	public double getAmt() {
 		return amt;
+	}
+
+	@Override
+	public boolean isSameElementAs(IElementProvider other) {
+		return false;
 	}
 }

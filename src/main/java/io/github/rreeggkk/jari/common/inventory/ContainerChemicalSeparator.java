@@ -1,29 +1,33 @@
 package io.github.rreeggkk.jari.common.inventory;
 
-import io.github.rreeggkk.jari.common.entity.tile.TileEntityRTG;
+import io.github.rreeggkk.jari.common.entity.tile.TileEntityChemicalSeparator;
+import io.github.rreeggkk.jari.common.enums.RedstonePowerMode;
 import io.github.rreeggkk.jari.common.inventory.slot.MachineSlot;
-import io.github.rreeggkk.jari.common.item.ItemRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ContainerRTG extends Container implements ITileContainer{
-	public TileEntityRTG tile;
-	private int lastEnergy, lastEpT;
+public class ContainerChemicalSeparator extends Container implements ITileContainer{
+	public TileEntityChemicalSeparator tile;
+	private int lastCook, lastEnergy, lastStartEnergy,
+			lastPowerIndex;
 
-	public ContainerRTG(InventoryPlayer player,
-			TileEntityRTG tilee) {
+	public ContainerChemicalSeparator(InventoryPlayer player,
+			TileEntityChemicalSeparator tilee) {
 		int playerInvOffX = 0;
 		int playerInvOffY = 12;
 
 		tile = tilee;
-		addSlotToContainer(new MachineSlot(tilee, 0, 80, 36));
+		addSlotToContainer(new MachineSlot(tilee, 0, 44, 36));
+		addSlotToContainer(new SlotFurnace(player.player, tilee, 1, 116, 27));
+		addSlotToContainer(new SlotFurnace(player.player, tilee, 2, 116, 27 + 18));
 
 		for (int x = 0; x < 9; x++) {
 			addSlotToContainer(new Slot(player, x, 8 + 18 * x + playerInvOffX,
@@ -43,7 +47,9 @@ public class ContainerRTG extends Container implements ITileContainer{
 	public void addCraftingToCrafters(ICrafting crafter) {
 		super.addCraftingToCrafters(crafter);
 		crafter.sendProgressBarUpdate(this, 0, tile.getEnergy());
-		crafter.sendProgressBarUpdate(this, 1, tile.getInfoEnergyPerTick());
+		crafter.sendProgressBarUpdate(this, 1, tile.getProcess());
+		crafter.sendProgressBarUpdate(this, 2, tile.getProcessStartEnergy());
+		crafter.sendProgressBarUpdate(this, 4, tile.getPowerMode().getIndex());
 	}
 
 	/**
@@ -59,13 +65,23 @@ public class ContainerRTG extends Container implements ITileContainer{
 			if (lastEnergy != tile.getEnergy()) {
 				icrafting.sendProgressBarUpdate(this, 0, tile.getEnergy());
 			}
-			if (lastEpT != tile.getInfoEnergyPerTick()) {
-				icrafting.sendProgressBarUpdate(this, 1, tile.getInfoEnergyPerTick());
+			if (lastCook != tile.getProcess()) {
+				icrafting.sendProgressBarUpdate(this, 1, tile.getProcess());
+			}
+			if (lastStartEnergy != tile.getProcessStartEnergy()) {
+				icrafting.sendProgressBarUpdate(this, 2,
+						tile.getProcessStartEnergy());
+			}
+			if (lastPowerIndex != tile.getPowerMode().getIndex()) {
+				icrafting.sendProgressBarUpdate(this, 4, tile.getPowerMode()
+						.getIndex());
 			}
 		}
 
 		lastEnergy = tile.getEnergy();
-		lastEpT = tile.getInfoEnergyPerTick();
+		lastCook = tile.getProcess();
+		lastStartEnergy = tile.getProcessStartEnergy();
+		lastPowerIndex = tile.getPowerMode().getIndex();
 	}
 
 	@Override
@@ -75,7 +91,13 @@ public class ContainerRTG extends Container implements ITileContainer{
 			tile.setEnergy(val);
 		}
 		if (id == 1) {
-			tile.setEnergyPerTick(val);
+			tile.setProcess(val);
+		}
+		if (id == 2) {
+			tile.setProcessStartEnergy(val);
+		}
+		if (id == 4) {
+			tile.setPowerMode(RedstonePowerMode.getFromIndex(val));
 		}
 	}
 
@@ -89,6 +111,14 @@ public class ContainerRTG extends Container implements ITileContainer{
 	 */
 	@Override
 	public boolean enchantItem(EntityPlayer player, int action) {
+		// Make sure that only the server acts on the action
+		if (!player.getEntityWorld().isRemote) {
+			if (action == 0) {
+				tile.setPowerMode(RedstonePowerMode.getNext(tile.getPowerMode()));
+			} else if (action == 1) {
+				
+			}
+		}
 		return super.enchantItem(player, action);
 	}
 
@@ -104,27 +134,27 @@ public class ContainerRTG extends Container implements ITileContainer{
 		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
-			if (slotNum == 0) {
-				if (!mergeItemStack(itemstack1, 1, 37, true)) {
+			if (slotNum == 0 || slotNum == 1 || slotNum == 2) {
+				if (!mergeItemStack(itemstack1, 3, 39, true)) {
 					return null;
 				}
 
 				slot.onSlotChange(itemstack1, itemstack);
-			} else if (itemstack1.getItem() == ItemRegistry.metalLump
-					&& slotNum >= 1
-					&& slotNum < 37) {
+			} else if (tile.isItemValidForSlot(0, itemstack1)
+					&& slotNum >= 3
+					&& slotNum < 39) {
 				if (!mergeItemStack(itemstack1, 0, 1, false)) {
 					return null;
 				}
-			} else if (slotNum >= 1 && slotNum < 10) {
-				if (!mergeItemStack(itemstack1, 10, 37, false)) {
+			} else if (slotNum >= 3 && slotNum < 12) {
+				if (!mergeItemStack(itemstack1, 12, 39, false)) {
 					return null;
 				}
-			} else if (slotNum >= 10 && slotNum < 37) {
-				if (!mergeItemStack(itemstack1, 1, 10, false)) {
+			} else if (slotNum >= 12 && slotNum < 39) {
+				if (!mergeItemStack(itemstack1, 3, 12, false)) {
 					return null;
 				}
-			} else if (!mergeItemStack(itemstack1, 1, 37, false)) {
+			} else if (!mergeItemStack(itemstack1, 3, 39, false)) {
 				return null;
 			}
 

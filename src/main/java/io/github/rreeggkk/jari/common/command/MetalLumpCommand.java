@@ -11,6 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 
+import org.apfloat.Apfloat;
+
 public class MetalLumpCommand implements ICommand {
 	@SuppressWarnings("rawtypes")
 	private List aliases;
@@ -52,7 +54,7 @@ public class MetalLumpCommand implements ICommand {
 
 			for (int i = 1; i < astring.length; i += 2) {
 				ItemRegistry.metalLump.addMetalToLump(stack, astring[i - 1],
-						Double.parseDouble(astring[i]));
+						new Apfloat(Double.parseDouble(astring[i])));
 			}
 
 			if (!player.inventory.addItemStackToInventory(stack)) {

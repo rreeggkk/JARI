@@ -4,6 +4,7 @@ import io.github.rreeggkk.jari.common.inventory.ITileContainer;
 
 import java.util.ArrayList;
 
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 
@@ -59,6 +60,14 @@ public class JARIGuiScreen<T extends Container & ITileContainer> extends GuiCont
 
 	public void drawHoveringText(ArrayList<String> list, int i, int j) {
 		this.drawHoveringText(list, i, j, fontRendererObj);
+	}
+	
+	public void drawText(String str, int x, int y, int color) {
+		this.drawString(fontRendererObj, str, x, y, color);
+	}
+	
+	public FontRenderer getFontRendererObj() {
+		return fontRendererObj;
 	}
 
 	public int getXSize() {

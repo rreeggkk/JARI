@@ -18,6 +18,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.apfloat.Apfloat;
+
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
@@ -28,11 +31,12 @@ public class TileEntityRTG extends TileEntity implements ISidedInventory, IEnerg
 	private ItemStack[] inventory;
 	private EnergyStorage energyStorage;
 	private int lastEnergyPerTick;
-	private double energyCounter;
+	private Apfloat energyCounter;
 
 	public TileEntityRTG() {
 		energyStorage = new EnergyStorage(10000, 1000000, 10000);
 		inventory = new ItemStack[1];
+		energyCounter = new Apfloat(0, Apfloat.INFINITE);
 	}
 
 	@Override
@@ -40,23 +44,25 @@ public class TileEntityRTG extends TileEntity implements ISidedInventory, IEnerg
 		super.updateEntity();
 		if (!worldObj.isRemote) {
 
-			double energyGenerated = 0;
+			Apfloat energyGenerated = new Apfloat(0);
 			if (inventory[0] != null) {
-				HashMap<String, Double> metalMap = ItemRegistry.metalLump.getContents(inventory[0]);
+				HashMap<String, Apfloat> metalMap = ItemRegistry.metalLump.getContents(inventory[0]);
 				if (metalMap != null) {
 					for (String element : metalMap.keySet()) {
-						double mass = metalMap.get(element);
+						Apfloat mass = metalMap.get(element).precision(128);
 						IElementProvider provider = ElementRegistry.getProviderForElement(element);
 						if (provider != null) {
-							double gramsFiss = provider.getSpontaneousFissionChance() * mass;
+							Apfloat gramsFiss = provider.getSpontaneousFissionChance().precision(128).multiply(mass);
 							
-							if (gramsFiss > mass) {
+							if (gramsFiss.compareTo(mass) > 0) {
 								gramsFiss = mass;
 							}
+							
+							gramsFiss = gramsFiss.precision(128);
 
-							energyGenerated += provider.getFissionEnergy() * gramsFiss;
+							energyGenerated = energyGenerated.precision(128).add(gramsFiss.multiply(new Apfloat(provider.getFissionEnergy()).precision(128)));
 
-							Map<String, Double> fissProd = provider.doFission(FissionMode.DECAY, gramsFiss);
+							Map<String, Apfloat> fissProd = provider.doFission(FissionMode.DECAY, gramsFiss);
 							
 							ItemRegistry.metalLump.removeMetalFromLump(inventory[0], element, gramsFiss);
 							
@@ -68,13 +74,13 @@ public class TileEntityRTG extends TileEntity implements ISidedInventory, IEnerg
 				}
 			}
 
-			energyGenerated *= ConfigHandler.RTGEnergyMultiplier;
+			energyGenerated = energyGenerated.multiply(new Apfloat(ConfigHandler.RTGEnergyMultiplier));
 
-			lastEnergyPerTick = (int)energyGenerated;
+			lastEnergyPerTick = energyGenerated.intValue();
 			
-			energyCounter += (energyGenerated - lastEnergyPerTick);
-			if (energyCounter >= 1) {
-				energyCounter-=1;
+			energyCounter = energyCounter.add(energyGenerated.subtract(new Apfloat(lastEnergyPerTick)));
+			if (energyCounter.compareTo(new Apfloat(1)) > 0) {
+				energyCounter = energyCounter.subtract(new Apfloat(1));
 				lastEnergyPerTick+=1;
 			}
 
@@ -139,7 +145,7 @@ public class TileEntityRTG extends TileEntity implements ISidedInventory, IEnerg
 		}
 		
 		lastEnergyPerTick = nbt.getInteger("LastNRG");
-		energyCounter = nbt.getDouble("enCounter");
+		energyCounter = new Apfloat(nbt.getString("enCounter"));
 	}
 	
 	@Override
@@ -159,7 +165,7 @@ public class TileEntityRTG extends TileEntity implements ISidedInventory, IEnerg
 		nbt.setTag("Items", nbttaglist);
 
 		nbt.setInteger("LastNRG", lastEnergyPerTick);
-		nbt.setDouble("enCounter", energyCounter);
+		nbt.setString("enCounter", energyCounter.toString());
 	}
 
 	@Override
@@ -229,7 +235,7 @@ public class TileEntityRTG extends TileEntity implements ISidedInventory, IEnerg
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
 		if (stack.getItem() == ItemRegistry.metalLump) {
-			return ItemRegistry.metalLump.getTotalMass(stack) <= ConfigHandler.RTG_MAX_WEIGHT;
+			return ItemRegistry.metalLump.getTotalMass(stack).compareTo(new Apfloat(ConfigHandler.RTG_MAX_WEIGHT)) <= 0;
 		}
 		return false;
 	}
@@ -291,7 +297,7 @@ public class TileEntityRTG extends TileEntity implements ISidedInventory, IEnerg
 	}
 
 	public int getComparatorOutput() {
-		return 0;
+		return (int) (15*(double)energyStorage.getEnergyStored()/energyStorage.getMaxEnergyStored());
 	}
 
 	@Override
